@@ -1,7 +1,8 @@
 readData();
 function readData(id = -1){
+
+    createWeatherElement();
     
-    let valid = isValidId(id);
     const API_KEY = '2cc48dd34be6452386a130925240905';
     let inputData;
     let test = 'http://api.weatherapi.com/v1/current.json?key=2cc48dd34be6452386a130925240905&q=London&aqi=no'
@@ -11,10 +12,10 @@ function readData(id = -1){
     let baseUrl = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}`;
     //let params = `&q=London&aqi=no`;
     let params = `&q=48.8567,2.3508&aqi=no&days=14`;
-    console.log(baseUrl+params,   id , valid )
+    console.log(baseUrl+params,   id  )
     getWeatherData(baseUrl+params)
     
-
+//----------------------------------------------------------------------------------------------------
     //return true if there's an element with the specified ids in the document.
     function isValidId(id) {
         // Check if the id is a non-empty string
@@ -24,6 +25,18 @@ function readData(id = -1){
         return document.getElementById(id) !== null;
     }
 
+    // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
+    function createWeatherElement(){
+        let valid = isValidId(id);
+        const newDiv = document.createElement('div');
+
+        newDiv.textContent = 'weather Div';
+        newDiv.id = 'weatherDiv';
+        
+
+        const parentElement = valid ? document.getElementById(id) : document.body;
+        parentElement.appendChild(newDiv);
+    }
 
     function addInput(){
 
