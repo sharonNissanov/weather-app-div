@@ -93,17 +93,17 @@ function readData(id = -1){
         if (data?.forecast?.forecastday) {
             data.forecast.forecastday.forEach(day => {
                 const date = new Date(day.date);
-                const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+                const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
                 const dayOfWeekIndex = date.getUTCDay();
     
                 if (avgValues[dayOfWeekIndex]?.avgTemp !== undefined) {
                     const prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
                     const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
                     avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
-                    avgValues[dayOfWeekIndex].name = dayOfWeek;
+                    avgValues[dayOfWeekIndex].name = dayOfWeekStr;
                 }
                 else{ // Initialize the avgTemp for the current day if it doesn't exist
-                    avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c}
+                    avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c};
                 }
 
             });
