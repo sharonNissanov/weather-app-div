@@ -101,11 +101,12 @@ function readData(id = -1){
                     const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
                     avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
                     avgValues[dayOfWeekIndex].name = dayOfWeekStr;
+                    avgValues[dayOfWeekIndex].condition =  day.day?.condition; //TODO: CHECK IT
                 }
                 else{ // Initialize the avgTemp for the current day if it doesn't exist
                     avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c};
                 }
-
+                console.log( day.day.condition.text, day.day.avgtemp_c );
             });
         }
         console.log( avgValues);
