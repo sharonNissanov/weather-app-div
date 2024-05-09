@@ -19,11 +19,12 @@ function readData(id = -1){
     function isValidId(id){
         if(id == null  || id == undefined)
             return false;
-        if(document.getElementById(id) || null ){
+        if(document.getElementById(id) != null ){
             return true
         }
         return false;
     }
+
 
     function addInput(){
 
