@@ -1,4 +1,4 @@
-readData('sharon');
+readData();
 function readData(id = -1){
     
     let valid = isValidId(id);
@@ -15,14 +15,13 @@ function readData(id = -1){
     getWeatherData(baseUrl+params)
     
 
-    //gets an id and return true if there is an ele with this id
-    function isValidId(id){
-        if(id == null  || id == undefined)
+    //return true if there's an element with the specified ids in the document.
+    function isValidId(id) {
+        // Check if the id is a non-empty string
+        if (typeof id !== 'string' || id.trim() === '') {
             return false;
-        if(document.getElementById(id) != null ){
-            return true
-        }
-        return false;
+        } 
+        return document.getElementById(id) !== null;
     }
 
 
