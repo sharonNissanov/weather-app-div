@@ -2,7 +2,7 @@
 (function readData(id = -1){
     
     const API_KEY = '2cc48dd34be6452386a130925240905';
-
+    let inputData;
     let test = 'http://api.weatherapi.com/v1/current.json?key=2cc48dd34be6452386a130925240905&q=London&aqi=no'
     console.log(111111, test,   id )
 
@@ -23,4 +23,31 @@
     .catch(error => {
         console.error('ERROR:', error);
     });
+
+    function isValidId(){
+
+    }
+
+    function addInput(){
+
+    }
+
+    function onChangeInput(){
+
+    }
+
+    // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
+    function getUserLocation(){
+
+    }
+
+    //For each day of the week, show the average temperature for the next 2 weeks.
+    function calcAvg(){
+
+    }
+
+    //create Weather Cards
+    function createWeatherCard(){
+
+    }
 })();
