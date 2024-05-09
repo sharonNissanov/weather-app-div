@@ -16,6 +16,18 @@ function readData(id = -1){
     getWeatherData(baseUrl+params)
     
 //----------------------------------------------------------------------------------------------------
+
+    // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
+    function createWeatherElement(){
+      
+        const newDiv = document.createElement('div');
+        newDiv.textContent = 'weather Div';
+        newDiv.id = 'weatherDiv';
+        
+        const parentElement = getTargetElement();
+        parentElement.appendChild(newDiv);
+    }
+
     //return true if there's an element with the specified ids in the document.
     function isValidId(id) {
         // Check if the id is a non-empty string
@@ -25,18 +37,7 @@ function readData(id = -1){
         return document.getElementById(id) !== null;
     }
 
-    // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
-    function createWeatherElement(){
-        let valid = isValidId(id);
-        const newDiv = document.createElement('div');
-
-        newDiv.textContent = 'weather Div';
-        newDiv.id = 'weatherDiv';
-        
-
-        const parentElement = valid ? document.getElementById(id) : document.body;
-        parentElement.appendChild(newDiv);
-    }
+    
 
     function addInput(){
 
@@ -45,7 +46,12 @@ function readData(id = -1){
     function onChangeInput(){
 
     }
-
+    
+    //return the target element
+    function getTargetElement(){
+        let valid = isValidId(id);
+        return  valid ? document.getElementById(id) : document.body;
+    }
     function getWeatherData(url){
         fetch(url)
         .then(response => {
