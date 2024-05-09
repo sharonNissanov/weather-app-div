@@ -87,25 +87,28 @@ function readData(id = -1){
 
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data){
-        let avgValues = [];
-        let obj = {};
-        if(data.forecast?.forecastday){
-            data.forecast?.forecastday.forEach(day=>{
-                let date = new Date(day.date);
-                const dayOfWeekName = date.toLocaleDateString('en-US', { weekday: 'short' });
-                console.log(date.getUTCDay(), ":",  day?.day?.avgtemp_c)
-                if(obj[date.getUTCDay()] != undefined){
-                    obj[date.getUTCDay()].avgTemp = (obj[date.getUTCDay()].avgTemp + day?.day?.avgtemp_c ) /2;
-                }else{
-                    obj[date.getUTCDay()] = {avgTemp : day?.day?.avgtemp_c }
+        let avgValues = {};
+
+        // Check if data and forecast forecastday exist before proceeding
+        if (data?.forecast?.forecastday) {
+            data.forecast.forecastday.forEach(day => {
+                const date = new Date(day.date);
+                const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+                const dayOfWeekIndex = date.getUTCDay();
+    
+                if (avgValues[dayOfWeekIndex]?.avgTemp !== undefined) {
+                    const prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
+                    const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
+                    avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
+                    avgValues[dayOfWeekIndex].name = dayOfWeek;
                 }
-             
-                obj[date.getUTCDay()].avgTemp = parseFloat( obj[date.getUTCDay()].avgTemp.toFixed(2));
-               // console.log(dayOfWeekName,) ; // Output: Tuesday
+                else{ // Initialize the avgTemp for the current day if it doesn't exist
+                    avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c}
+                }
 
             });
         }
-        console.log( obj);
+        console.log( avgValues);
     }
 
     //create Weather Cards
