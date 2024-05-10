@@ -18,9 +18,9 @@ function readData() :void{
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() : void{
         const newDiv = document.createElement('div');
-        newDiv.textContent = 'weather Div';
         newDiv.id = 'weatherDiv';
-        addInput(newDiv)
+        addLabel(newDiv);
+        addInput(newDiv);
         parentElement = getTargetElement();
         if(parentElement !== null){
             parentElement.appendChild(newDiv);
@@ -45,6 +45,12 @@ function readData() :void{
             return false;
         } 
         return document.getElementById(id.toString()) !== null;
+    }
+
+    function addLabel(parentEle): void{
+        const label = document.createElement('label');
+        label.textContent = 'Please enter the wanted location';
+        parentEle.appendChild(label);
     }
 
     //Add input element TODO: DOCU
@@ -88,7 +94,7 @@ function readData() :void{
    
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data){
-        
+        avgValues = {};
         // Check if data and forecast forecastday exist before proceeding
         if (data?.forecast?.forecastday) {
             data.forecast.forecastday.forEach(day => {

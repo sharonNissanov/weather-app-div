@@ -2,12 +2,12 @@ readData();
 function readData() {
     var avgValues = {};
     var urlParams = new URLSearchParams(window.location.search);
+    var API_KEY = '2cc48dd34be6452386a130925240905';
+    var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
     var id = urlParams.get('divId');
     console.log(id);
-    var API_KEY = '2cc48dd34be6452386a130925240905';
     var parentElement;
     createWeatherElement();
-    var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
     var params = "&q=".concat(id);
     console.log(baseUrl + params, id);
     getWeatherData(baseUrl + params);
@@ -15,8 +15,8 @@ function readData() {
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() {
         var newDiv = document.createElement('div');
-        newDiv.textContent = 'weather Div';
         newDiv.id = 'weatherDiv';
+        addLabel(newDiv);
         addInput(newDiv);
         parentElement = getTargetElement();
         if (parentElement !== null) {
@@ -39,6 +39,11 @@ function readData() {
             return false;
         }
         return document.getElementById(id.toString()) !== null;
+    }
+    function addLabel(parentEle) {
+        var label = document.createElement('label');
+        label.textContent = 'Please enter the wanted location';
+        parentEle.appendChild(label);
     }
     //Add input element TODO: DOCU
     function addInput(parentEle) {
@@ -77,6 +82,7 @@ function readData() {
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data) {
         var _a;
+        avgValues = {};
         // Check if data and forecast forecastday exist before proceeding
         if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
             data.forecast.forecastday.forEach(function (day) {
@@ -100,7 +106,7 @@ function readData() {
         console.log(avgValues);
         buildWeatherCards();
     }
-    //create Weather Cards
+    //create Weather Cards container 
     function buildWeatherCards() {
         var _a;
         var cardsContainer = document.getElementById("cardsContainer");
