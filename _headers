@@ -1,0 +1,2 @@
+
+Content-Security-Policy: default-src 'self'; frame-src 'self' https://dynamicweatherapp14.netlify.app
