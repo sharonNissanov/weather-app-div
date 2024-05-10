@@ -1,37 +1,44 @@
 readData();
-function readData(id: string = "") :void{
-  
+function readData() :void{
+    let avgValues = {};
     const urlParams = new URLSearchParams(window.location.search);
-    let urlParam = urlParams.get('divId');
-    console.log(urlParam)
-    const API_KEY = '2cc48dd34be6452386a130925240905';
-    let parentElement;
+    let id = urlParams.get('divId');
+    console.log(id)
+    const API_KEY: string = '2cc48dd34be6452386a130925240905';
+    let parentElement: HTMLElement | null ;
     createWeatherElement();
-    const baseUrl = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
-    let params = `&q=${urlParam}`;
-    console.log(baseUrl+params,   id  )
+    const baseUrl:string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
+    let params = `&q=${id}`;
+    console.log(baseUrl+params, id  )
     getWeatherData(baseUrl+params)
 
 //----------------------------------------------------------------------------------------------------
 
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
-    function createWeatherElement(){
+    function createWeatherElement() : void{
         const newDiv = document.createElement('div');
         newDiv.textContent = 'weather Div';
         newDiv.id = 'weatherDiv';
         addInput(newDiv)
         parentElement = getTargetElement();
-        parentElement.appendChild(newDiv);
+        if(parentElement !== null){
+            parentElement.appendChild(newDiv);
+        }
+      //else error
     }
 
     //return the target element
-    function getTargetElement(){
+    function getTargetElement() : HTMLElement | null {
         let valid = isValidId(id);
-        return  valid ? document.getElementById(id.toString()) : document.body;
+        if(typeof id === 'string' && valid ){ 
+            return document.getElementById(id.toString());
+
+        }
+        return document.body;
     }
 
     //return true if there's an element with the specified ids in the document.
-    function isValidId(id) {
+    function isValidId(id: string | null): boolean {
         // Check if the id is a non-empty string
         if (typeof id !== 'string' || id.trim() === '') {
             return false;
@@ -40,7 +47,7 @@ function readData(id: string = "") :void{
     }
 
     //Add input element TODO: DOCU
-    function addInput(parentEle){
+    function addInput(parentEle): void{
         const inputElement = document.createElement('input');
         inputElement.id = 'weatherInput';
         inputElement.type = 'text';
@@ -58,7 +65,7 @@ function readData(id: string = "") :void{
     }
 
      // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
-    function getWeatherData(url){
+    function getWeatherData(url:string){
         fetch(url)
         .then(response => {
           
@@ -80,8 +87,7 @@ function readData(id: string = "") :void{
    
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data){
-        let avgValues = {};
-
+        
         // Check if data and forecast forecastday exist before proceeding
         if (data?.forecast?.forecastday) {
             data.forecast.forecastday.forEach(day => {
@@ -102,13 +108,22 @@ function readData(id: string = "") :void{
                 console.log( day.day.condition.text, day.day.avgtemp_c );
             });
         }
-        console.log( avgValues);
+        console.log( Object.keys(avgValues));
+        createWeatherCard();
     }
 
     //create Weather Cards
-    function createWeatherCard(){
+    function createWeatherCard(): void{
+        let cardsContainer = document.createElement('div');
+        cardsContainer.id = "cardsContainer";
+        Object.keys(avgValues).forEach(value=>{
+            let card = document.createElement('div');
+            card.className = 'weatherCard';
+            card.textContent = avgValues[value].name;
+            cardsContainer.appendChild( card)
+        })
 
-      // document.getElementById('weatherDiv').append() 
+       document.getElementById('weatherDiv')?.append(cardsContainer) 
     }
 
 };

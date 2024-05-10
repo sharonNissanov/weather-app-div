@@ -1,14 +1,14 @@
 readData();
-function readData(id) {
-    if (id === void 0) { id = ""; }
+function readData() {
+    var avgValues = {};
     var urlParams = new URLSearchParams(window.location.search);
-    var urlParam = urlParams.get('divId');
-    console.log(urlParam);
+    var id = urlParams.get('divId');
+    console.log(id);
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var parentElement;
     createWeatherElement();
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
-    var params = "&q=".concat(urlParam);
+    var params = "&q=".concat(id);
     console.log(baseUrl + params, id);
     getWeatherData(baseUrl + params);
     //----------------------------------------------------------------------------------------------------
@@ -19,12 +19,18 @@ function readData(id) {
         newDiv.id = 'weatherDiv';
         addInput(newDiv);
         parentElement = getTargetElement();
-        parentElement.appendChild(newDiv);
+        if (parentElement !== null) {
+            parentElement.appendChild(newDiv);
+        }
+        //else error
     }
     //return the target element
     function getTargetElement() {
         var valid = isValidId(id);
-        return valid ? document.getElementById(id.toString()) : document.body;
+        if (typeof id === 'string' && valid) {
+            return document.getElementById(id.toString());
+        }
+        return document.body;
     }
     //return true if there's an element with the specified ids in the document.
     function isValidId(id) {
@@ -71,7 +77,6 @@ function readData(id) {
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data) {
         var _a;
-        var avgValues = {};
         // Check if data and forecast forecastday exist before proceeding
         if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
             data.forecast.forecastday.forEach(function (day) {
@@ -92,11 +97,21 @@ function readData(id) {
                 console.log(day.day.condition.text, day.day.avgtemp_c);
             });
         }
-        console.log(avgValues);
+        console.log(Object.keys(avgValues));
+        createWeatherCard();
     }
     //create Weather Cards
     function createWeatherCard() {
-        // document.getElementById('weatherDiv').append() 
+        var _a;
+        var cardsContainer = document.createElement('div');
+        cardsContainer.id = "cardsContainer";
+        Object.keys(avgValues).forEach(function (value) {
+            var card = document.createElement('div');
+            card.className = 'weatherCard';
+            card.textContent = avgValues[value].name;
+            cardsContainer.appendChild(card);
+        });
+        (_a = document.getElementById('weatherDiv')) === null || _a === void 0 ? void 0 : _a.append(cardsContainer);
     }
 }
 ;
