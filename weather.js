@@ -1,13 +1,8 @@
 readData();
 function readData(id = -1){
 
-   
-    
     const API_KEY = '2cc48dd34be6452386a130925240905';
-    let inputData;
     let parentElement;
-    let test = 'http://api.weatherapi.com/v1/current.json?key=2cc48dd34be6452386a130925240905&q=London&aqi=no'
-    
     createWeatherElement();
     const baseUrl = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
     let params = `&q=48.8567,2.3508`;
@@ -18,7 +13,6 @@ function readData(id = -1){
 
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement(){
-      
         const newDiv = document.createElement('div');
         newDiv.textContent = 'weather Div';
         newDiv.id = 'weatherDiv';
@@ -46,7 +40,7 @@ function readData(id = -1){
     function addInput(parentEle){
         const inputElement = document.createElement('input');
         inputElement.id = 'weatherInput';
-        //add type = text
+        inputElement.type = 'text';
         //Add an event listener to the input element
         inputElement.addEventListener('change', onChangeInput);
         parentEle.appendChild(inputElement);
@@ -60,7 +54,7 @@ function readData(id = -1){
         getWeatherData(reqUrl);
     }
 
-
+     // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
     function getWeatherData(url){
         fetch(url)
         .then(response => {
@@ -80,11 +74,7 @@ function readData(id = -1){
         });
     }
 
-    // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
-    function getUserLocation(){
-
-    }
-
+   
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data){
         let avgValues = {};
@@ -115,6 +105,7 @@ function readData(id = -1){
     //create Weather Cards
     function createWeatherCard(){
 
+      // document.getElementById('weatherDiv').append() 
     }
 
 };
