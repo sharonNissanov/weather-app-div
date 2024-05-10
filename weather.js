@@ -115,16 +115,21 @@ function readData() {
             card.className = 'weatherCard';
             card.textContent = avgValues[value].name;
             card.appendChild(getIcon(value));
+            card.appendChild(getDesc(value));
             return card;
         }
         function getIcon(value) {
-            var _a, _b, _c, _d;
+            var _a, _b;
             var icon = document.createElement('img');
-            console.log((_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.icon);
-            icon.src = 'https:' + ((_d = (_c = avgValues[value]) === null || _c === void 0 ? void 0 : _c.condition) === null || _d === void 0 ? void 0 : _d.icon);
+            icon.src = 'https:' + ((_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.icon);
             return icon;
         }
+        function getDesc(value) {
+            var _a, _b;
+            var desc = document.createElement('span');
+            desc.innerHTML = (_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.text;
+            return desc;
+        }
     }
-    // https://cdn.weatherapi.com/weather/64x64/day/176.png
 }
 ;
