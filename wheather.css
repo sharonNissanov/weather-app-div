@@ -3,7 +3,10 @@
 }
 
 .weatherCard{
-    border:2px red solid;
+    border: 2px red solid;
     padding: 5px;
     margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

@@ -108,22 +108,35 @@ function readData() :void{
                 console.log( day.day.condition.text, day.day.avgtemp_c );
             });
         }
-        console.log( Object.keys(avgValues));
-        createWeatherCard();
+        console.log( avgValues);
+        buildWeatherCards();
     }
 
     //create Weather Cards
-    function createWeatherCard(): void{
+    function buildWeatherCards(): void{
         let cardsContainer = document.createElement('div');
         cardsContainer.id = "cardsContainer";
         Object.keys(avgValues).forEach(value=>{
-            let card = document.createElement('div');
-            card.className = 'weatherCard';
-            card.textContent = avgValues[value].name;
-            cardsContainer.appendChild( card)
+            let card = buildWeatherCard(value);
+            cardsContainer.appendChild(card);
         })
 
-       document.getElementById('weatherDiv')?.append(cardsContainer) 
-    }
+       document.getElementById('weatherDiv')?.append(cardsContainer); 
 
+       function buildWeatherCard(value: any): HTMLDivElement{
+        let card = document.createElement('div');
+        card.className = 'weatherCard';
+        card.textContent = avgValues[value].name;
+        card.appendChild(getIcon(value));
+        return card;
+       }
+
+       function getIcon(value): HTMLImageElement {
+        let icon = document.createElement('img');
+        console.log(avgValues[value]?.condition?.icon)
+        icon.src = 'https:' + avgValues[value]?.condition?.icon;
+        return icon;
+       }
+    }
+  
 };

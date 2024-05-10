@@ -97,21 +97,34 @@ function readData() {
                 console.log(day.day.condition.text, day.day.avgtemp_c);
             });
         }
-        console.log(Object.keys(avgValues));
-        createWeatherCard();
+        console.log(avgValues);
+        buildWeatherCards();
     }
     //create Weather Cards
-    function createWeatherCard() {
+    function buildWeatherCards() {
         var _a;
         var cardsContainer = document.createElement('div');
         cardsContainer.id = "cardsContainer";
         Object.keys(avgValues).forEach(function (value) {
-            var card = document.createElement('div');
-            card.className = 'weatherCard';
-            card.textContent = avgValues[value].name;
+            var card = buildWeatherCard(value);
             cardsContainer.appendChild(card);
         });
         (_a = document.getElementById('weatherDiv')) === null || _a === void 0 ? void 0 : _a.append(cardsContainer);
+        function buildWeatherCard(value) {
+            var card = document.createElement('div');
+            card.className = 'weatherCard';
+            card.textContent = avgValues[value].name;
+            card.appendChild(getIcon(value));
+            return card;
+        }
+        function getIcon(value) {
+            var _a, _b, _c, _d;
+            var icon = document.createElement('img');
+            console.log((_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.icon);
+            icon.src = 'https:' + ((_d = (_c = avgValues[value]) === null || _c === void 0 ? void 0 : _c.condition) === null || _d === void 0 ? void 0 : _d.icon);
+            return icon;
+        }
     }
+    // https://cdn.weatherapi.com/weather/64x64/day/176.png
 }
 ;
