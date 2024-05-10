@@ -2,12 +2,13 @@ readData();
 function readData() :void{
     let avgValues = {};
     const urlParams = new URLSearchParams(window.location.search);
+    const API_KEY: string = '2cc48dd34be6452386a130925240905';
+    const baseUrl:string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
+   
     let id = urlParams.get('divId');
     console.log(id)
-    const API_KEY: string = '2cc48dd34be6452386a130925240905';
     let parentElement: HTMLElement | null ;
     createWeatherElement();
-    const baseUrl:string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
     let params = `&q=${id}`;
     console.log(baseUrl+params, id  )
     getWeatherData(baseUrl+params)
@@ -112,7 +113,7 @@ function readData() :void{
         buildWeatherCards();
     }
 
-    //create Weather Cards
+    //create Weather Cards container 
     function buildWeatherCards(): void{
         let cardsContainer:  HTMLElement | null= document.getElementById("cardsContainer");
         if(document.getElementById("cardsContainer") !== null ){
