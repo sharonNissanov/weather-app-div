@@ -1,14 +1,17 @@
 readData();
 function readData(id: string = "") :void{
-
+  
+    const urlParams = new URLSearchParams(window.location.search);
+    let urlParam = urlParams.get('divId');
+    console.log(urlParam)
     const API_KEY = '2cc48dd34be6452386a130925240905';
     let parentElement;
     createWeatherElement();
     const baseUrl = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
-    let params = `&q=48.8567,2.3508`;
+    let params = `&q=${urlParam}`;
     console.log(baseUrl+params,   id  )
     getWeatherData(baseUrl+params)
-    
+
 //----------------------------------------------------------------------------------------------------
 
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body

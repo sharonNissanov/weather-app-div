@@ -1,11 +1,14 @@
 readData();
 function readData(id) {
     if (id === void 0) { id = ""; }
+    var urlParams = new URLSearchParams(window.location.search);
+    var urlParam = urlParams.get('divId');
+    console.log(urlParam);
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var parentElement;
     createWeatherElement();
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
-    var params = "&q=48.8567,2.3508";
+    var params = "&q=".concat(urlParam);
     console.log(baseUrl + params, id);
     getWeatherData(baseUrl + params);
     //----------------------------------------------------------------------------------------------------
