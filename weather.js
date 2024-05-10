@@ -103,11 +103,17 @@ function readData() {
     //create Weather Cards
     function buildWeatherCards() {
         var _a;
-        var cardsContainer = document.createElement('div');
-        cardsContainer.id = "cardsContainer";
+        var cardsContainer = document.getElementById("cardsContainer");
+        if (document.getElementById("cardsContainer") !== null) {
+            cardsContainer.innerHTML = "";
+        }
+        else {
+            cardsContainer = document.createElement('div');
+            cardsContainer.id = "cardsContainer";
+        }
         Object.keys(avgValues).forEach(function (value) {
             var card = buildWeatherCard(value);
-            cardsContainer.appendChild(card);
+            cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
         });
         (_a = document.getElementById('weatherDiv')) === null || _a === void 0 ? void 0 : _a.append(cardsContainer);
         function buildWeatherCard(value) {

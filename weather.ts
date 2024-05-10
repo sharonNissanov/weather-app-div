@@ -114,14 +114,20 @@ function readData() :void{
 
     //create Weather Cards
     function buildWeatherCards(): void{
-        let cardsContainer = document.createElement('div');
-        cardsContainer.id = "cardsContainer";
+        let cardsContainer:  HTMLElement | null= document.getElementById("cardsContainer");
+        if(document.getElementById("cardsContainer") !== null ){
+            (cardsContainer as HTMLElement ).innerHTML = "";
+        }else{
+            cardsContainer = document.createElement('div');
+            cardsContainer.id = "cardsContainer";
+        } 
+
         Object.keys(avgValues).forEach(value=>{
             let card = buildWeatherCard(value);
-            cardsContainer.appendChild(card);
+            cardsContainer?.appendChild(card);
         })
 
-       document.getElementById('weatherDiv')?.append(cardsContainer); 
+       document.getElementById('weatherDiv')?.append(cardsContainer  as HTMLElement ); 
 
        function buildWeatherCard(value: any): HTMLDivElement{
         let card = document.createElement('div');
