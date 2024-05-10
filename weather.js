@@ -122,6 +122,7 @@ function readData() {
             card.textContent = avgValues[value].name;
             card.appendChild(getIcon(value));
             card.appendChild(getDesc(value));
+            card.appendChild(getTemp(value));
             return card;
         }
         function getIcon(value) {
@@ -134,6 +135,12 @@ function readData() {
             var _a, _b;
             var desc = document.createElement('span');
             desc.innerHTML = (_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.text;
+            return desc;
+        }
+        function getTemp(value) {
+            var _a;
+            var desc = document.createElement('span');
+            desc.innerHTML = ((_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.avgTemp) + "&deg";
             return desc;
         }
     }

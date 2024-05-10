@@ -135,6 +135,7 @@ function readData() :void{
         card.textContent = avgValues[value].name;
         card.appendChild(getIcon(value));
         card.appendChild(getDesc(value));
+        card.appendChild(getTemp(value));
         return card;
        }
 
@@ -146,7 +147,13 @@ function readData() :void{
 
        function getDesc(value): HTMLSpanElement{
         let desc = document.createElement('span');
-        desc.innerHTML = avgValues[value]?.condition?.text
+        desc.innerHTML = avgValues[value]?.condition?.text;
+        return desc;
+       }
+
+       function getTemp(value): HTMLSpanElement{
+        let desc = document.createElement('span');
+        desc.innerHTML = avgValues[value]?.avgTemp + "&deg";
         return desc;
        }
     }
