@@ -128,14 +128,20 @@ function readData() :void{
         card.className = 'weatherCard';
         card.textContent = avgValues[value].name;
         card.appendChild(getIcon(value));
+        card.appendChild(getDesc(value));
         return card;
        }
 
        function getIcon(value): HTMLImageElement {
         let icon = document.createElement('img');
-        console.log(avgValues[value]?.condition?.icon)
         icon.src = 'https:' + avgValues[value]?.condition?.icon;
         return icon;
+       }
+
+       function getDesc(value): HTMLSpanElement{
+        let desc = document.createElement('span');
+        desc.innerHTML = avgValues[value]?.condition?.text
+        return desc;
        }
     }
   
