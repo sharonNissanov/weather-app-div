@@ -17,7 +17,6 @@ function readData() {
         addLabel(newDiv);
         addInput(newDiv);
         parentElement = getTargetElement();
-        console.log("parentElement", parentElement);
         if (parentElement !== null) {
             parentElement.appendChild(newDiv);
         }
@@ -26,7 +25,6 @@ function readData() {
     //return the target element
     function getTargetElement() {
         var valid = isValidId();
-        console.log("here", valid);
         if (typeof id === 'string' && valid) {
             return document.getElementById(id);
         }
@@ -34,12 +32,10 @@ function readData() {
     }
     //return true if there's an element with the specified ids in the document.
     function isValidId() {
-        console.log(2, id);
         // Check if the id is a non-empty string
         if (typeof id !== 'string' || id.trim() === '') {
             return false;
         }
-        console.log(1, document.getElementById(id));
         return document.getElementById(id) !== null;
     }
     function addLabel(parentEle) {
