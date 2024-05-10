@@ -4,16 +4,13 @@ function readData() :void{
     const urlParams = new URLSearchParams(window.location.search);
     const API_KEY: string = '2cc48dd34be6452386a130925240905';
     const baseUrl:string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
-   
-    let id = urlParams.get('divId');
+    var id = urlParams.get('divId');
     console.log(id)
-    let parentElement: HTMLElement | null ;
+    let parentElement: HTMLElement | null;
     createWeatherElement();
     let params = `&q=${id}`;
     console.log(baseUrl+params, id  )
-    getWeatherData(baseUrl+params)
 
-//----------------------------------------------------------------------------------------------------
 
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() : void{
@@ -29,22 +26,21 @@ function readData() :void{
     }
 
     //return the target element
-    function getTargetElement() : HTMLElement | null {
-        let valid = isValidId(id);
+    function getTargetElement() : HTMLElement | null  {
+        let valid = isValidId();
         if(typeof id === 'string' && valid ){ 
-            return document.getElementById(id.toString());
-
+            return document.getElementById(id);
         }
-        return document.body;
+        return document.getElementsByTagName('body')[0];
     }
 
     //return true if there's an element with the specified ids in the document.
-    function isValidId(id: string | null): boolean {
+    function isValidId(): boolean {
         // Check if the id is a non-empty string
         if (typeof id !== 'string' || id.trim() === '') {
             return false;
         } 
-        return document.getElementById(id.toString()) !== null;
+        return document.getElementById(id) !== null;
     }
 
     function addLabel(parentEle): void{

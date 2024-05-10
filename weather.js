@@ -10,8 +10,6 @@ function readData() {
     createWeatherElement();
     var params = "&q=".concat(id);
     console.log(baseUrl + params, id);
-    getWeatherData(baseUrl + params);
-    //----------------------------------------------------------------------------------------------------
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() {
         var newDiv = document.createElement('div');
@@ -19,6 +17,7 @@ function readData() {
         addLabel(newDiv);
         addInput(newDiv);
         parentElement = getTargetElement();
+        console.log("parentElement", parentElement);
         if (parentElement !== null) {
             parentElement.appendChild(newDiv);
         }
@@ -26,19 +25,22 @@ function readData() {
     }
     //return the target element
     function getTargetElement() {
-        var valid = isValidId(id);
+        var valid = isValidId();
+        console.log("here", valid);
         if (typeof id === 'string' && valid) {
-            return document.getElementById(id.toString());
+            return document.getElementById(id);
         }
-        return document.body;
+        return document.getElementsByTagName('body')[0];
     }
     //return true if there's an element with the specified ids in the document.
-    function isValidId(id) {
+    function isValidId() {
+        console.log(2, id);
         // Check if the id is a non-empty string
         if (typeof id !== 'string' || id.trim() === '') {
             return false;
         }
-        return document.getElementById(id.toString()) !== null;
+        console.log(1, document.getElementById(id));
+        return document.getElementById(id) !== null;
     }
     function addLabel(parentEle) {
         var label = document.createElement('label');
