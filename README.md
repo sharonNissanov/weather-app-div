@@ -17,7 +17,7 @@ displaying weather icons, descriptions, and temperatures.
 # Usage
 1. Run the index.html file to see the project in action on your computer.
 2. Include the buildDynamicWeatherDiv() function in your JavaScript code.
-Call buildDynamicWeatherDiv() to create the weather display element on your webpage (just make sure you to copy the style fron the weather.css file).
+Call buildDynamicWeatherDiv() to create the weather display element on your webpage (just make sure you to copy the style from the weather.css file).
 
 # How it Works
 Creating Weather Element: The createWeatherElement() function creates a weather element containing input and result sections for users to enter their location and view the weather forecast.
