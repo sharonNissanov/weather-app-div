@@ -34,15 +34,15 @@ Creating Weather Card: The buildWeatherCard() function constructs a weather card
 Creating HTML Elements: The getElement() function creates HTML elements with optional properties and attributes.
 
 # Function Signatures
-buildDynamicWeatherDiv(): void: Builds the dynamic weather display element on the webpage.
+ - buildDynamicWeatherDiv(): void: Builds the dynamic weather display element on the webpage.
 createWeatherElement(): void: Creates the weather element containing input and result sections.
-onChangeInput(event: Event): void: Handles input change events triggered by the location input field.
-getWeatherData(url: string): void: Fetches weather data from the Weather API based on the provided URL.
-setResultTitle(succeeded: boolean, data: WeatherData | null): void: Sets the title based on the success of fetching weather data.
-calcAvgTemp(data: WeatherData): void: Calculates the average temperature for each day of the week.
-buildWeatherCardsByCurrDate(data: WeatherData): void: Builds weather cards for the upcoming 7 days starting from the current date.
-buildWeatherCard(dayOfWeekStr: string, imgSrc: string, text: string, avgTemp: number): HTMLElement: Constructs a weather card element for a specific day.
-getElement(tag: string, text: string, id?: string, type?: string, className?: string, src?: string, eventListener?: EventListener): HTMLElement: Creates an HTML element with optional properties and attributes.
+- onChangeInput(event: Event): void: Handles input change events triggered by the location input field.
+- getWeatherData(url: string): void: Fetches weather data from the Weather API based on the provided URL.
+- setResultTitle(succeeded: boolean, data: WeatherData | null): void: Sets the title based on the success of fetching weather data.
+- calcAvgTemp(data: WeatherData): void: Calculates the average temperature for each day of the week.
+- buildWeatherCardsByCurrDate(data: WeatherData): void: Builds weather cards for the upcoming 7 days starting from the current date.
+- buildWeatherCard(dayOfWeekStr: string, imgSrc: string, text: string, avgTemp: number): HTMLElement: Constructs a weather card element for a specific day.
+- getElement(tag: string, text: string, id?: string, type?: string, className?: string, src?: string, - - eventListener?: EventListener): HTMLElement: Creates an HTML element with optional properties and attributes.
 
 # Weather Data Type
 The WeatherData type represents the structure of the weather data retrieved from the Weather API.
