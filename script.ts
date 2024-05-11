@@ -58,7 +58,7 @@ var targetElement = getTargetElement(targetID);
 	
 	// Append the new div to the document body
 	if(targetElement!==null){
-		targetElement.appendChild(newdiv);
+		targetElement.prepend(newdiv);
 	}
 	
 })();
