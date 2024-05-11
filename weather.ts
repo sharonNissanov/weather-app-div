@@ -72,7 +72,7 @@ function getWeatherData(url:string): void{
     .then(data => {
         setResultTitle(true, data);
         console.log(data); 
-        displayAvgWeatherCards(data);
+        calcAvgTemp(data);
     })
     .catch(error => {
         // Handle errors
@@ -110,12 +110,12 @@ function setResultTitle(succeeded: boolean, data: WeatherData | null): void {
  */
 
 /**
- * sets a map with the avg temp of any day
-* Calculate the average temperature for each day of the week based on the provided weather data.
+* Calculate the average temperature for each day of the week based on the provided weather data
+* and save it in a map. (the key is the day index and the value is the average temperature).
 * @param {WeatherData} data - The weather data containing forecast information.
 * @returns {void}
 */
-function displayAvgWeatherCards(data: WeatherData): void{
+function calcAvgTemp(data: WeatherData): void{
 
     // Initialize a map to store the average temperatures for each day of the week
     avgMap = new Map<number, number>();

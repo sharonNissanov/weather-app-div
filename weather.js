@@ -66,7 +66,7 @@ function buildDynamicWeatherDiv() {
             .then(function (data) {
             setResultTitle(true, data);
             console.log(data);
-            displayAvgWeatherCards(data);
+            calcAvgTemp(data);
         })
             .catch(function (error) {
             // Handle errors
@@ -102,12 +102,12 @@ function buildDynamicWeatherDiv() {
      * @returns {void}
      */
     /**
-     * sets a map with the avg temp of any day
-    * Calculate the average temperature for each day of the week based on the provided weather data.
+    * Calculate the average temperature for each day of the week based on the provided weather data
+    * and save it in a map. (the key is the day index and the value is the average temperature).
     * @param {WeatherData} data - The weather data containing forecast information.
     * @returns {void}
     */
-    function displayAvgWeatherCards(data) {
+    function calcAvgTemp(data) {
         var _a;
         // Initialize a map to store the average temperatures for each day of the week
         avgMap = new Map();
