@@ -46,6 +46,7 @@ Creating HTML Elements: The getElement() function creates HTML elements with opt
 
 # Weather Data Type
 The WeatherData type represents the structure of the weather data retrieved from the Weather API.
+```json
 type WeatherData = {
     location: {
         name: string;
@@ -67,7 +68,7 @@ type WeatherData = {
         }[];
     };
 };
-
+```
 # Requirements
 Internet connection to fetch weather data from the Weather API.
 Access to the Weather API with a valid API key.
