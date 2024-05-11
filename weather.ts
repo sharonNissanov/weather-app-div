@@ -12,7 +12,6 @@
 
 buildDynamicWeatherDiv();
 function buildDynamicWeatherDiv() :void{
-    let avgValues = {};
     let avgMap: Map<number, number>;
     const API_KEY: string = '2cc48dd34be6452386a130925240905';
     const baseUrl: string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
@@ -104,32 +103,42 @@ function setResultTitle(succeeded: boolean, data: WeatherData | null): void {
     }
 }
 
-//saves a map with the avg temp od any day
+
+/**
+ * Builds the weather cards container and appends weather cards to it.
+ * If the cards container already exists, clear its contents
+ * @returns {void}
+ */
+
+/**
+ * saves a map with the avg temp od any day
+* Calculate the average temperature for each day of the week based on the provided weather data.
+* @param {WeatherData} data - The weather data containing forecast information.
+* @returns {void}
+*/
 function testAvg(data: WeatherData): void{
     
     let cardsContainer: HTMLElement = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
     cardsContainer.innerHTML = "";
 
-    let dayOfWeekStr: string;
-    let dayOfWeekIndex: number;
-
-     avgMap = new Map<number, number>();
+    // Initialize a map to store the average temperatures for each day of the week
+    avgMap = new Map<number, number>();
     if (data?.forecast?.forecastday) {
         data.forecast.forecastday.forEach(day => {
 
             const date = new Date(day.date);
-            dayOfWeekIndex = date.getUTCDay();
-            dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const dayOfWeekIndex = date.getUTCDay();
+            const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
 
            // Check if the average temperature for the current day of the week already exists
             if (typeof dayOfWeekIndex === "number" && avgMap.has(dayOfWeekIndex)) {
-                const avgTemp = avgMap.get(dayOfWeekIndex) || 0; //for any case of error
+                const avgTemp = avgMap.get(dayOfWeekIndex) || 0;  // Default to 0 if not found
                 const newAvg = (day.day.avgtemp_c + avgTemp) / 2;
                 avgMap.set(dayOfWeekIndex, parseFloat(newAvg.toFixed(2)));
 
-                let card = buildWeatherCard1(day.day?.condition);
+                //Build and append the weather card for the current day
+                let card = buildWeatherCard(dayOfWeekStr, day.day?.condition, avgMap.get(dayOfWeekIndex) as number);
                 cardsContainer?.appendChild(card);
-
             } else {
                 avgMap.set(dayOfWeekIndex, day.day.avgtemp_c);
             }
@@ -137,85 +146,18 @@ function testAvg(data: WeatherData): void{
     }
     console.log(avgMap)
     document.getElementById('weatherDiv')?.append(cardsContainer); 
-     
-    function buildWeatherCard1(cardData: any): HTMLElement{
-        const card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
-        card.appendChild(getElement('img','','','','', 'https:' +cardData?.icon));
-        card.appendChild(getElement('span', cardData?.text));
-        card.appendChild(getElement('span', avgMap.get(dayOfWeekIndex) + "&deg"));
-        return card;
-    }
-
-}
-
-
- //--------------------------------------------------------
-/**
- * Calculate the average temperature for each day of the week based on the provided weather data.
- * @param {WeatherData} data - The weather data containing forecast information.
- * @returns {void}
- */
-function calcAvgTemp(data: WeatherData): void{
-    
-    // Initialize an object to store the average temperatures for each day of the week
-    avgValues = {};
-
-    // Check if Check if the required data is exist before proceeding
-    if (data?.forecast?.forecastday) {
-        data.forecast.forecastday.forEach(day => {
-            // Extract the date and day of the week information
-            const date: Date = new Date(day.date);
-            const dayOfWeekStr:string = date.toLocaleDateString('en-US', { weekday: 'short' });
-            const dayOfWeekIndex: number = date.getUTCDay();
-
-            // Check if the average temperature for the current day of the week already exists
-            if (avgValues[dayOfWeekIndex] !== undefined && typeof avgValues[dayOfWeekIndex].avgTemp === "number") {
-                  // Calculate the new average temperature by averaging the current and previous temperatures
-                const prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
-                const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
-                avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
-                avgValues[dayOfWeekIndex].name = dayOfWeekStr;
-                avgValues[dayOfWeekIndex].condition =  day.day?.condition; //TODO: CHECK IT
-            }
-            else{ // Initialize the avgTemp for the current day if it doesn't exist
-                avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c};
-            }
-        });
-    }
-    console.log( avgValues);
-
-    // Build weather cards based on the calculated average temperatures
-    buildWeatherCards();
-}
-
-/**
- * Builds the weather cards container and appends weather cards to it.
- * If the cards container already exists, clear its contents
- * @returns {void}
- */
-function buildWeatherCards(): void{
-
-   let cardsContainer: HTMLElement = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
-   cardsContainer.innerHTML = "";
-
-    Object.keys(avgValues).forEach(value=>{
-        let card = buildWeatherCard(value);
-        cardsContainer?.appendChild(card);
-    })
-
-    document.getElementById('weatherDiv')?.append(cardsContainer); 
-
+       
 /**
  * build a new div element for the weather card.
  * and append child elements to it for weather icon, description, and temperature.
- * @param {any} value - The data for the day containing name, condition, and average temperature.
+ * @param {any} cardData - The data for the day containing name, condition, and average temperature.
  * @returns {HTMLElement} - The constructed weather card element.
  */
-    function buildWeatherCard(value: any): HTMLElement{
-        const card = getElement('div', avgValues[value].name, '', '', 'weatherCard');
-        card.appendChild(getElement('img','','','','', 'https:' + avgValues[value]?.condition?.icon));
-        card.appendChild(getElement('span', avgValues[value]?.condition?.text));
-        card.appendChild(getElement('span', avgValues[value]?.avgTemp + "&deg"));
+    function buildWeatherCard(dayOfWeekStr: string, cardData: any, avgTemp: number): HTMLElement {
+        const card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
+        card.appendChild(getElement('img','','','','', 'https:' + cardData?.icon));
+        card.appendChild(getElement('span', cardData?.text));
+        card.appendChild(getElement('span', avgTemp + "&deg"));
         return card;
     }
 
@@ -326,14 +268,3 @@ type WeatherData = {
     };
 };
 
-type WeatherAvgForecast = Partial<{
-    [key: number]: {
-        avgTemp: number;
-        name: string;
-        condition: {
-            text: string;
-            icon: string;
-            code: number;
-        };
-    };
-}>; 

@@ -10,7 +10,6 @@
  */
 buildDynamicWeatherDiv();
 function buildDynamicWeatherDiv() {
-    var avgValues = {};
     var avgMap;
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
@@ -98,26 +97,36 @@ function buildDynamicWeatherDiv() {
             }
         }
     }
-    //saves a map with the avg temp od any day
+    /**
+     * Builds the weather cards container and appends weather cards to it.
+     * If the cards container already exists, clear its contents
+     * @returns {void}
+     */
+    /**
+     * saves a map with the avg temp od any day
+    * Calculate the average temperature for each day of the week based on the provided weather data.
+    * @param {WeatherData} data - The weather data containing forecast information.
+    * @returns {void}
+    */
     function testAvg(data) {
         var _a, _b;
         var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
         cardsContainer.innerHTML = "";
-        var dayOfWeekStr;
-        var dayOfWeekIndex;
+        // Initialize a map to store the average temperatures for each day of the week
         avgMap = new Map();
         if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
             data.forecast.forecastday.forEach(function (day) {
                 var _a;
                 var date = new Date(day.date);
-                dayOfWeekIndex = date.getUTCDay();
-                dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+                var dayOfWeekIndex = date.getUTCDay();
+                var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
                 // Check if the average temperature for the current day of the week already exists
                 if (typeof dayOfWeekIndex === "number" && avgMap.has(dayOfWeekIndex)) {
-                    var avgTemp = avgMap.get(dayOfWeekIndex) || 0; //for any case of error
+                    var avgTemp = avgMap.get(dayOfWeekIndex) || 0; // Default to 0 if not found
                     var newAvg = (day.day.avgtemp_c + avgTemp) / 2;
                     avgMap.set(dayOfWeekIndex, parseFloat(newAvg.toFixed(2)));
-                    var card = buildWeatherCard1((_a = day.day) === null || _a === void 0 ? void 0 : _a.condition);
+                    //Build and append the weather card for the current day
+                    var card = buildWeatherCard(dayOfWeekStr, (_a = day.day) === null || _a === void 0 ? void 0 : _a.condition, avgMap.get(dayOfWeekIndex));
                     cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
                 }
                 else {
@@ -127,103 +136,17 @@ function buildDynamicWeatherDiv() {
         }
         console.log(avgMap);
         (_b = document.getElementById('weatherDiv')) === null || _b === void 0 ? void 0 : _b.append(cardsContainer);
-        // buildWeatherCards2(data)
-        function buildWeatherCard1(cardData) {
-            var card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
-            card.appendChild(getElement('img', '', '', '', '', 'https:' + (cardData === null || cardData === void 0 ? void 0 : cardData.icon)));
-            card.appendChild(getElement('span', cardData === null || cardData === void 0 ? void 0 : cardData.text));
-            card.appendChild(getElement('span', avgMap.get(dayOfWeekIndex) + "&deg"));
-            return card;
-        }
-    }
-    //
-    function buildWeatherCards2(data) {
-        var _a, _b;
-        var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
-        cardsContainer.innerHTML = "";
-        var dayOfWeekStr;
-        var dayOfWeekIndex;
-        if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
-            data.forecast.forecastday.forEach(function (day) {
-                var _a;
-                var date = new Date(day.date);
-                dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
-                dayOfWeekIndex = date.getUTCDay();
-                var card = buildWeatherCard((_a = day.day) === null || _a === void 0 ? void 0 : _a.condition);
-                cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
-            });
-        }
-        (_b = document.getElementById('weatherDiv')) === null || _b === void 0 ? void 0 : _b.append(cardsContainer);
-        function buildWeatherCard(cardData) {
-            var card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
-            card.appendChild(getElement('img', '', '', '', '', 'https:' + (cardData === null || cardData === void 0 ? void 0 : cardData.icon)));
-            card.appendChild(getElement('span', cardData === null || cardData === void 0 ? void 0 : cardData.text));
-            card.appendChild(getElement('span', avgMap.get(dayOfWeekIndex) + "&deg"));
-            return card;
-        }
-    }
-    //--------------------------------------------------------
-    /**
-     * Calculate the average temperature for each day of the week based on the provided weather data.
-     * @param {WeatherData} data - The weather data containing forecast information.
-     * @returns {void}
-     */
-    function calcAvgTemp(data) {
-        var _a;
-        // Initialize an object to store the average temperatures for each day of the week
-        avgValues = {};
-        // Check if Check if the required data is exist before proceeding
-        if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
-            data.forecast.forecastday.forEach(function (day) {
-                var _a;
-                // Extract the date and day of the week information
-                var date = new Date(day.date);
-                var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
-                var dayOfWeekIndex = date.getUTCDay();
-                // Check if the average temperature for the current day of the week already exists
-                if (avgValues[dayOfWeekIndex] !== undefined && typeof avgValues[dayOfWeekIndex].avgTemp === "number") {
-                    // Calculate the new average temperature by averaging the current and previous temperatures
-                    var prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
-                    var newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
-                    avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
-                    avgValues[dayOfWeekIndex].name = dayOfWeekStr;
-                    avgValues[dayOfWeekIndex].condition = (_a = day.day) === null || _a === void 0 ? void 0 : _a.condition; //TODO: CHECK IT
-                }
-                else { // Initialize the avgTemp for the current day if it doesn't exist
-                    avgValues[dayOfWeekIndex] = { avgTemp: day.day.avgtemp_c };
-                }
-            });
-        }
-        console.log(avgValues);
-        // Build weather cards based on the calculated average temperatures
-        buildWeatherCards();
-    }
-    /**
-     * Builds the weather cards container and appends weather cards to it.
-     * If the cards container already exists, clear its contents
-     * @returns {void}
-     */
-    function buildWeatherCards() {
-        var _a;
-        var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
-        cardsContainer.innerHTML = "";
-        Object.keys(avgValues).forEach(function (value) {
-            var card = buildWeatherCard(value);
-            cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
-        });
-        (_a = document.getElementById('weatherDiv')) === null || _a === void 0 ? void 0 : _a.append(cardsContainer);
         /**
          * build a new div element for the weather card.
          * and append child elements to it for weather icon, description, and temperature.
-         * @param {any} value - The data for the day containing name, condition, and average temperature.
+         * @param {any} cardData - The data for the day containing name, condition, and average temperature.
          * @returns {HTMLElement} - The constructed weather card element.
          */
-        function buildWeatherCard(value) {
-            var _a, _b, _c, _d, _e;
-            var card = getElement('div', avgValues[value].name, '', '', 'weatherCard');
-            card.appendChild(getElement('img', '', '', '', '', 'https:' + ((_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.icon)));
-            card.appendChild(getElement('span', (_d = (_c = avgValues[value]) === null || _c === void 0 ? void 0 : _c.condition) === null || _d === void 0 ? void 0 : _d.text));
-            card.appendChild(getElement('span', ((_e = avgValues[value]) === null || _e === void 0 ? void 0 : _e.avgTemp) + "&deg"));
+        function buildWeatherCard(dayOfWeekStr, cardData, avgTemp) {
+            var card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
+            card.appendChild(getElement('img', '', '', '', '', 'https:' + (cardData === null || cardData === void 0 ? void 0 : cardData.icon)));
+            card.appendChild(getElement('span', cardData === null || cardData === void 0 ? void 0 : cardData.text));
+            card.appendChild(getElement('span', avgTemp + "&deg"));
             return card;
         }
     }
