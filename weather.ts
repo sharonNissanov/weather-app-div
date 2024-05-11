@@ -6,65 +6,76 @@ function readData() :void{
 
     createWeatherElement();
 
-    // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
-    function createWeatherElement() : void{
-        const newDiv: HTMLDivElement = document.createElement('div');
-        newDiv.id = 'weatherDiv';
-        addLabel(newDiv);
-        addInput(newDiv);
-        addResultTitle(newDiv);
-        let bodyElement: HTMLElement | null = document.getElementsByTagName('body')[0];
-        if(bodyElement !== null){
-            bodyElement.appendChild(newDiv);
-        }
-      //else error
+/**
+ * Creates a weather element containing input and result sections.
+ * Appends the new div to an existing element in body.
+ */
+function createWeatherElement(): void {
+    const newDiv: HTMLDivElement = document.createElement('div');
+    newDiv.id = 'weatherDiv';
+    addElement(newDiv, 'label', 'Please enter the wanted location');
+    addElement(newDiv, 'input', '', 'weatherInput', 'text', onChangeInput);
+    addElement(newDiv, 'p', '', 'resultTitle');
+    
+    const bodyElement: HTMLElement | null = document.body;
+    if (bodyElement !== null) {
+        bodyElement.appendChild(newDiv);
+    } else {
+        console.error('Body element was not found');
     }
+}
 
-    function addLabel(parentEle: HTMLDivElement): void{
-        const label = document.createElement('label');
-        label.textContent = 'Please enter a name of a city or coordinates';
-        parentEle.appendChild(label);
+   /**
+ * Adds an element to a parent element with optional properties and attributes.
+ * @param parentEle The parent element to append the new element to.
+ * @param tag The type of element to create (e.g., 'label', 'input', 'p').
+ * @param text The text content for the new element.
+ * @param id The id attribute for the new element.
+ * @param type The type attribute for input elements.
+ * @param eventListener The event listener function to attach to the new element.
+ */
+function addElement(parentEle: HTMLDivElement, tag: string, text: string, id?: string, type?: string, eventListener?: EventListener): void {
+    const element = document.createElement(tag);
+    if (id) {
+        element.id = id;
     }
-
-    //Add input element TODO: DOCU
-    function addInput(parentEle: HTMLDivElement): void{
-        const inputElement = document.createElement('input');
-        inputElement.id = 'weatherInput';
-        inputElement.type = 'text';
-        //Add an event listener to the input element
-        inputElement.addEventListener('change', onChangeInput);
-        parentEle.appendChild(inputElement);
+    if (type) {
+        (element as HTMLInputElement).type = type;
     }
-
-    function addResultTitle(parentEle: HTMLDivElement): void{
-        const pElement = document.createElement('p');
-        pElement.id = 'resultTitle';
-        parentEle.appendChild(pElement);
+    if (text) {
+        element.textContent = text;
     }
+    if (eventListener) {
+        element.addEventListener('change', eventListener);
+    }
+    parentEle.appendChild(element);
+}
 
-    function onChangeInput(event){
-        // This function will be called whenever the user types into the input field
-        const inputValue = event.target.value;
+/**
+ * This function will be called whenever the user types into the input field.
+ * @param event The change event triggered by the input field.
+ */
+    function onChangeInput(event: Event): void{
+        const inputValue = (event.target as HTMLInputElement).value;
         console.log('Input value:', inputValue);
         let reqUrl = baseUrl + `&q=${inputValue}`;
         getWeatherData(reqUrl);
     }
 
      // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
-    function getWeatherData(url:string){
+    function getWeatherData(url:string): void{
         console.log(url )
         fetch(url)
         .then(response => {
             if (!response.ok) {
                 setResultTitle(false, null);
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
             return response.json(); 
         })
         .then(data => {
             setResultTitle(true, data);
             console.log(data); 
-
             calcAvg(data);
         })
         .catch(error => {

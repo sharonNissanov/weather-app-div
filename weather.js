@@ -4,40 +4,54 @@ function readData() {
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
     createWeatherElement();
-    // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
+    /**
+     * Creates a weather element containing input and result sections.
+     * Appends the new div to an existing element in body.
+     */
     function createWeatherElement() {
         var newDiv = document.createElement('div');
         newDiv.id = 'weatherDiv';
-        addLabel(newDiv);
-        addInput(newDiv);
-        addResultTitle(newDiv);
-        var bodyElement = document.getElementsByTagName('body')[0];
+        addElement(newDiv, 'label', 'Please enter the wanted location');
+        addElement(newDiv, 'input', '', 'weatherInput', 'text', onChangeInput);
+        addElement(newDiv, 'p', '', 'resultTitle');
+        var bodyElement = document.body;
         if (bodyElement !== null) {
             bodyElement.appendChild(newDiv);
         }
-        //else error
+        else {
+            console.error('Body element was not found');
+        }
     }
-    function addLabel(parentEle) {
-        var label = document.createElement('label');
-        label.textContent = 'Please enter a name of a city or coordinates';
-        parentEle.appendChild(label);
+    /**
+  * Adds an element to a parent element with optional properties and attributes.
+  * @param parentEle The parent element to append the new element to.
+  * @param tag The type of element to create (e.g., 'label', 'input', 'p').
+  * @param text The text content for the new element.
+  * @param id The id attribute for the new element.
+  * @param type The type attribute for input elements.
+  * @param eventListener The event listener function to attach to the new element.
+  */
+    function addElement(parentEle, tag, text, id, type, eventListener) {
+        var element = document.createElement(tag);
+        if (id) {
+            element.id = id;
+        }
+        if (type) {
+            element.type = type;
+        }
+        if (text) {
+            element.textContent = text;
+        }
+        if (eventListener) {
+            element.addEventListener('change', eventListener);
+        }
+        parentEle.appendChild(element);
     }
-    //Add input element TODO: DOCU
-    function addInput(parentEle) {
-        var inputElement = document.createElement('input');
-        inputElement.id = 'weatherInput';
-        inputElement.type = 'text';
-        //Add an event listener to the input element
-        inputElement.addEventListener('change', onChangeInput);
-        parentEle.appendChild(inputElement);
-    }
-    function addResultTitle(parentEle) {
-        var pElement = document.createElement('p');
-        pElement.id = 'resultTitle';
-        parentEle.appendChild(pElement);
-    }
+    /**
+     * This function will be called whenever the user types into the input field.
+     * @param event The change event triggered by the input field.
+     */
     function onChangeInput(event) {
-        // This function will be called whenever the user types into the input field
         var inputValue = event.target.value;
         console.log('Input value:', inputValue);
         var reqUrl = baseUrl + "&q=".concat(inputValue);
@@ -49,7 +63,8 @@ function readData() {
         fetch(url)
             .then(function (response) {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                setResultTitle(false, null);
+                console.error('Network response was not ok');
             }
             return response.json();
         })
@@ -74,7 +89,7 @@ function readData() {
             else {
                 resultEle.innerText = "Something went wrong, please try again";
                 var cardsContainer = document.getElementById("cardsContainer");
-                if (cardsContainer !== null) {
+                if (cardsContainer) {
                     cardsContainer.innerHTML = "";
                 }
             }
