@@ -1,19 +1,16 @@
 readData();
 function readData() {
     var avgValues = {};
-    //const urlParams = new URLSearchParams(window.location.search);
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
-    // var id = urlParams.get('divId');
-    // console.log(id)
     createWeatherElement();
-    // let params = `&q=${id}`;
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() {
         var newDiv = document.createElement('div');
         newDiv.id = 'weatherDiv';
         addLabel(newDiv);
         addInput(newDiv);
+        addResultTitle(newDiv);
         var bodyElement = document.getElementsByTagName('body')[0];
         if (bodyElement !== null) {
             bodyElement.appendChild(newDiv);
@@ -22,7 +19,7 @@ function readData() {
     }
     function addLabel(parentEle) {
         var label = document.createElement('label');
-        label.textContent = 'Please enter the wanted location';
+        label.textContent = 'Please enter a name of a city or coordinates';
         parentEle.appendChild(label);
     }
     //Add input element TODO: DOCU
@@ -33,6 +30,11 @@ function readData() {
         //Add an event listener to the input element
         inputElement.addEventListener('change', onChangeInput);
         parentEle.appendChild(inputElement);
+    }
+    function addResultTitle(parentEle) {
+        var pElement = document.createElement('p');
+        pElement.id = 'resultTitle';
+        parentEle.appendChild(pElement);
     }
     function onChangeInput(event) {
         // This function will be called whenever the user types into the input field
@@ -52,13 +54,31 @@ function readData() {
             return response.json();
         })
             .then(function (data) {
+            setResultTitle(true, data);
             console.log(data);
             calcAvg(data);
         })
             .catch(function (error) {
             //add error message
+            setResultTitle(false, null);
             console.error('ERROR:', error);
         });
+    }
+    function setResultTitle(succeeded, data) {
+        var _a;
+        var resultEle = document.getElementById("resultTitle");
+        if (resultEle) {
+            if (succeeded && ((_a = data === null || data === void 0 ? void 0 : data.location) === null || _a === void 0 ? void 0 : _a.name)) {
+                resultEle.innerText = "The average temperature for the next 2 weeks in ".concat(data.location.name);
+            }
+            else {
+                resultEle.innerText = "Something went wrong, please try again";
+                var cardsContainer = document.getElementById("cardsContainer");
+                if (cardsContainer !== null) {
+                    cardsContainer.innerHTML = "";
+                }
+            }
+        }
     }
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data) {
@@ -81,7 +101,7 @@ function readData() {
                 else { // Initialize the avgTemp for the current day if it doesn't exist
                     avgValues[dayOfWeekIndex] = { avgTemp: day.day.avgtemp_c };
                 }
-                console.log(day.day.condition.text, day.day.avgtemp_c);
+                //  console.log( day.day.condition.text, day.day.avgtemp_c );
             });
         }
         console.log(avgValues);

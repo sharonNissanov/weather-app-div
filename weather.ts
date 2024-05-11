@@ -1,22 +1,18 @@
 readData();
 function readData() :void{
     let avgValues = {};
-    //const urlParams = new URLSearchParams(window.location.search);
     const API_KEY: string = '2cc48dd34be6452386a130925240905';
     const baseUrl:string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
-   // var id = urlParams.get('divId');
-   // console.log(id)
-    
+
     createWeatherElement();
-   // let params = `&q=${id}`;
-    
 
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() : void{
-        const newDiv = document.createElement('div');
+        const newDiv: HTMLDivElement = document.createElement('div');
         newDiv.id = 'weatherDiv';
         addLabel(newDiv);
         addInput(newDiv);
+        addResultTitle(newDiv);
         let bodyElement: HTMLElement | null = document.getElementsByTagName('body')[0];
         if(bodyElement !== null){
             bodyElement.appendChild(newDiv);
@@ -24,20 +20,26 @@ function readData() :void{
       //else error
     }
 
-    function addLabel(parentEle): void{
+    function addLabel(parentEle: HTMLDivElement): void{
         const label = document.createElement('label');
-        label.textContent = 'Please enter the wanted location';
+        label.textContent = 'Please enter a name of a city or coordinates';
         parentEle.appendChild(label);
     }
 
     //Add input element TODO: DOCU
-    function addInput(parentEle): void{
+    function addInput(parentEle: HTMLDivElement): void{
         const inputElement = document.createElement('input');
         inputElement.id = 'weatherInput';
         inputElement.type = 'text';
         //Add an event listener to the input element
         inputElement.addEventListener('change', onChangeInput);
         parentEle.appendChild(inputElement);
+    }
+
+    function addResultTitle(parentEle: HTMLDivElement): void{
+        const pElement = document.createElement('p');
+        pElement.id = 'resultTitle';
+        parentEle.appendChild(pElement);
     }
 
     function onChangeInput(event){
@@ -53,23 +55,41 @@ function readData() :void{
         console.log(url )
         fetch(url)
         .then(response => {
-          
             if (!response.ok) {
-            throw new Error('Network response was not ok');
+                setResultTitle(false, null);
+                throw new Error('Network response was not ok');
             }
             return response.json(); 
         })
         .then(data => {
+            setResultTitle(true, data);
             console.log(data); 
-            calcAvg(data)
+
+            calcAvg(data);
         })
         .catch(error => {
             //add error message
+            setResultTitle(false, null);
             console.error('ERROR:', error);
         });
     }
 
-   
+    function setResultTitle(succeeded: boolean, data: any): void {
+        const resultEle = document.getElementById("resultTitle");
+        if (resultEle) {
+            if (succeeded && data?.location?.name) {
+                resultEle.innerText = `The average temperature for the next 2 weeks in ${data.location.name}`;
+            } else {
+                resultEle.innerText = "Something went wrong, please try again";
+                const cardsContainer = document.getElementById("cardsContainer");
+                if(cardsContainer){
+                    (cardsContainer as HTMLElement ).innerHTML = "";
+                }
+            }
+        }
+    }
+
+
     //For each day of the week, show the average temperature for the next 2 weeks.
     function calcAvg(data){
         avgValues = {};
@@ -90,7 +110,7 @@ function readData() :void{
                 else{ // Initialize the avgTemp for the current day if it doesn't exist
                     avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c};
                 }
-                console.log( day.day.condition.text, day.day.avgtemp_c );
+              //  console.log( day.day.condition.text, day.day.avgtemp_c );
             });
         }
         console.log( avgValues);
