@@ -1,6 +1,6 @@
-
+console.log('hi')
  (function injectScriptIntoDiv(targetID = ""){
-	
+
 	var targetElement = getTargetElement(targetID);
 	injectWithIframe();
 	/**
