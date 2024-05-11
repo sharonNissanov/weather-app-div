@@ -1,7 +1,7 @@
 /**
  * Builds a dynamic weather display element on the webpage.
  * This function creates a weather div containing input and result sections for users to enter their location
- * and view the average temperature for the next 2 weeks. It fetches weather data from an API and calculates
+ * and view the weather forecast for the next 2 weeks. It fetches weather data from an API and calculates
  * the average temperature for each day of the week. It then constructs weather cards for each day,
  * displaying weather icons, descriptions, and temperatures.
  * @returns {void}
@@ -75,7 +75,7 @@ function buildDynamicWeatherDiv() {
     /**
      * Sets the title based on the success of fetching weather data.
      * @param {boolean} - succeeded  A boolean indicating whether the data fetching was successful.
-     * @param {any} data -The weather data retrieved from the API.
+     * @param {WeatherData | null} data -The weather data retrieved from the API.
      * @returns {void}
      */
     function setResultTitle(succeeded, data) {
@@ -96,7 +96,7 @@ function buildDynamicWeatherDiv() {
     }
     /**
      * Calculate the average temperature for each day of the week based on the provided weather data.
-     * @param {Object} data - The weather data containing forecast information.
+     * @param {WeatherData} data - The weather data containing forecast information.
      * @returns {void}
      */
     function calcAvgTemp(data) {

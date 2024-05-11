@@ -82,10 +82,10 @@ function getWeatherData(url:string): void{
 /**
  * Sets the title based on the success of fetching weather data.
  * @param {boolean} - succeeded  A boolean indicating whether the data fetching was successful.
- * @param {any} data -The weather data retrieved from the API.
+ * @param {WeatherData | null} data -The weather data retrieved from the API.
  * @returns {void}
  */
-function setResultTitle(succeeded: boolean, data: any): void {
+function setResultTitle(succeeded: boolean, data: WeatherData | null): void {
     const resultEle = document.getElementById("resultTitle");
     if (resultEle) {
         if (succeeded && data?.location?.name) {
@@ -103,10 +103,10 @@ function setResultTitle(succeeded: boolean, data: any): void {
 
 /**
  * Calculate the average temperature for each day of the week based on the provided weather data.
- * @param {Object} data - The weather data containing forecast information.
+ * @param {WeatherData} data - The weather data containing forecast information.
  * @returns {void}
  */
-function calcAvgTemp(data): void{
+function calcAvgTemp(data: WeatherData): void{
     // Initialize an object to store the average temperatures for each day of the week
     avgValues = {};
 
@@ -114,9 +114,9 @@ function calcAvgTemp(data): void{
     if (data?.forecast?.forecastday) {
         data.forecast.forecastday.forEach(day => {
             // Extract the date and day of the week information
-            const date = new Date(day.date);
-            const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
-            const dayOfWeekIndex = date.getUTCDay();
+            const date: Date = new Date(day.date);
+            const dayOfWeekStr:string = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const dayOfWeekIndex: number = date.getUTCDay();
 
             // Check if the average temperature for the current day of the week already exists
             if (avgValues[dayOfWeekIndex]?.avgTemp !== undefined) {
@@ -206,4 +206,72 @@ function getElement(tag: string, text: string, id?: string, type?: string,
 
     return element;
 }
+};
+
+type WeatherData = {
+    location: {
+        name: string;
+        region: string;
+        country: string;
+        lat: number;
+        lon: number;
+        tz_id: string;
+        localtime_epoch: number;
+        localtime: string;
+    };
+    current: {
+        last_updated_epoch: number;
+        last_updated: string;
+        temp_c: number;
+        temp_f: number;
+        is_day: number;
+        condition: {
+            text: string;
+            icon: string;
+            code: number;
+        };
+        precip_in: number;
+        humidity: number;
+        cloud: number;
+        feelslike_c: number;
+        feelslike_f: number;
+        vis_miles: number;
+        uv: number;
+    };
+    forecast: {
+        forecastday: { //array of forecastday
+            date: string;
+            date_epoch: number;
+            day: {
+                maxtemp_c: number;
+                maxtemp_f: number;
+                mintemp_c: number;
+                mintemp_f: number;
+                avgtemp_c: number;
+                avgtemp_f: number;
+                maxwind_mph: number;
+                maxwind_kph: number;
+                totalprecip_mm: number;
+                totalprecip_in: number;
+                totalsnow_cm: number;
+                avgvis_km: number;
+                avgvis_miles: number;
+                avghumidity: number;
+                daily_will_it_rain: number;
+                daily_chance_of_rain: number;
+                daily_will_it_snow: number;
+                daily_chance_of_snow: number;
+                condition: {
+                    text: string;
+                    icon: string;
+                    code: number;
+                };
+                uv: number;
+            };
+            astro: any; 
+            hour: { //array of hour
+                condition: any; 
+            }[];
+        }[];
+    };
 };
