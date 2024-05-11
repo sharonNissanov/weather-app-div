@@ -11,6 +11,7 @@
 buildDynamicWeatherDiv();
 function buildDynamicWeatherDiv() {
     var avgValues = {};
+    var avgMap;
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
     createWeatherElement();
@@ -66,7 +67,8 @@ function buildDynamicWeatherDiv() {
             .then(function (data) {
             setResultTitle(true, data);
             console.log(data);
-            calcAvgTemp(data);
+            //calcAvgTemp(data);
+            testAvg(data);
         })
             .catch(function (error) {
             // Handle errors
@@ -96,20 +98,27 @@ function buildDynamicWeatherDiv() {
             }
         }
     }
+    //saves a map with the avg temp od any day
     function testAvg(data) {
-        var _a;
-        var avgMap = new Map();
-        var res = new Map();
+        var _a, _b;
+        var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
+        cardsContainer.innerHTML = "";
+        var dayOfWeekStr;
+        var dayOfWeekIndex;
+        avgMap = new Map();
         if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
             data.forecast.forecastday.forEach(function (day) {
+                var _a;
                 var date = new Date(day.date);
-                var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
-                var dayOfWeekIndex = date.getUTCDay();
-                // console.log('test', dayOfWeekIndex, avgMap[dayOfWeekIndex], day.day.avgtemp_c)
+                dayOfWeekIndex = date.getUTCDay();
+                dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+                // Check if the average temperature for the current day of the week already exists
                 if (typeof dayOfWeekIndex === "number" && avgMap.has(dayOfWeekIndex)) {
-                    var avgTemp = avgMap.get(dayOfWeekIndex) || 0; //
+                    var avgTemp = avgMap.get(dayOfWeekIndex) || 0; //for any case of error
                     var newAvg = (day.day.avgtemp_c + avgTemp) / 2;
                     avgMap.set(dayOfWeekIndex, parseFloat(newAvg.toFixed(2)));
+                    var card = buildWeatherCard1((_a = day.day) === null || _a === void 0 ? void 0 : _a.condition);
+                    cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
                 }
                 else {
                     avgMap.set(dayOfWeekIndex, day.day.avgtemp_c);
@@ -117,8 +126,43 @@ function buildDynamicWeatherDiv() {
             });
         }
         console.log(avgMap);
-        // console.log('----------------------------------------------------')
+        (_b = document.getElementById('weatherDiv')) === null || _b === void 0 ? void 0 : _b.append(cardsContainer);
+        // buildWeatherCards2(data)
+        function buildWeatherCard1(cardData) {
+            var card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
+            card.appendChild(getElement('img', '', '', '', '', 'https:' + (cardData === null || cardData === void 0 ? void 0 : cardData.icon)));
+            card.appendChild(getElement('span', cardData === null || cardData === void 0 ? void 0 : cardData.text));
+            card.appendChild(getElement('span', avgMap.get(dayOfWeekIndex) + "&deg"));
+            return card;
+        }
     }
+    //
+    function buildWeatherCards2(data) {
+        var _a, _b;
+        var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
+        cardsContainer.innerHTML = "";
+        var dayOfWeekStr;
+        var dayOfWeekIndex;
+        if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
+            data.forecast.forecastday.forEach(function (day) {
+                var _a;
+                var date = new Date(day.date);
+                dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+                dayOfWeekIndex = date.getUTCDay();
+                var card = buildWeatherCard((_a = day.day) === null || _a === void 0 ? void 0 : _a.condition);
+                cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
+            });
+        }
+        (_b = document.getElementById('weatherDiv')) === null || _b === void 0 ? void 0 : _b.append(cardsContainer);
+        function buildWeatherCard(cardData) {
+            var card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
+            card.appendChild(getElement('img', '', '', '', '', 'https:' + (cardData === null || cardData === void 0 ? void 0 : cardData.icon)));
+            card.appendChild(getElement('span', cardData === null || cardData === void 0 ? void 0 : cardData.text));
+            card.appendChild(getElement('span', avgMap.get(dayOfWeekIndex) + "&deg"));
+            return card;
+        }
+    }
+    //--------------------------------------------------------
     /**
      * Calculate the average temperature for each day of the week based on the provided weather data.
      * @param {WeatherData} data - The weather data containing forecast information.
@@ -126,7 +170,6 @@ function buildDynamicWeatherDiv() {
      */
     function calcAvgTemp(data) {
         var _a;
-        testAvg(data);
         // Initialize an object to store the average temperatures for each day of the week
         avgValues = {};
         // Check if Check if the required data is exist before proceeding
@@ -137,7 +180,6 @@ function buildDynamicWeatherDiv() {
                 var date = new Date(day.date);
                 var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
                 var dayOfWeekIndex = date.getUTCDay();
-                // console.log('org', dayOfWeekIndex, day.day.avgtemp_c)
                 // Check if the average temperature for the current day of the week already exists
                 if (avgValues[dayOfWeekIndex] !== undefined && typeof avgValues[dayOfWeekIndex].avgTemp === "number") {
                     // Calculate the new average temperature by averaging the current and previous temperatures
