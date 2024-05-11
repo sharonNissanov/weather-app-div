@@ -1,5 +1,15 @@
-readData();
-function readData() :void{
+
+/**
+ * Builds a dynamic weather display element on the webpage.
+ * This function creates a weather div containing input and result sections for users to enter their location
+ * and view the average temperature for the next 2 weeks. It fetches weather data from an API and calculates
+ * the average temperature for each day of the week. It then constructs weather cards for each day,
+ * displaying weather icons, descriptions, and temperatures.
+ * @returns {void}
+ */
+
+buildDynamicWeatherDiv();
+function buildDynamicWeatherDiv() :void{
     let avgValues = {};
     const API_KEY: string = '2cc48dd34be6452386a130925240905';
     const baseUrl: string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
@@ -7,8 +17,9 @@ function readData() :void{
     createWeatherElement();
 
 /**
- * Creates a weather element containing input and result sections.
+ * Creates a weather element containing label, input field, and result section.
  * Appends the new div to an existing element in body.
+ * @returns {void}
  */
 function createWeatherElement(): void {
     const newDiv:HTMLElement = getElement('div', '','weatherDiv');
@@ -16,6 +27,7 @@ function createWeatherElement(): void {
     newDiv.appendChild(getElement('input', '', 'weatherInput', 'text','', '', onChangeInput));
     newDiv.appendChild(getElement('p', '', 'resultTitle'));
     
+    // Append the new div to the body of the document
     const bodyElement: HTMLElement | null = document.body;
     if (bodyElement !== null) {
         bodyElement.appendChild(newDiv);
@@ -24,26 +36,31 @@ function createWeatherElement(): void {
     }
 }
 
-
 /**
- * This function will be called whenever the user types into the input field.
- * @param event The change event triggered by the input field.
+ * This function will be called whenever the user change the input field.
+ * @param {Event} event - The change event triggered by the input field.
+ * @returns {void}
  */
     function onChangeInput(event: Event): void{
+        //Retrieve user-entered location and construct API URL
         const inputValue: string = (event.target as HTMLInputElement).value;
         console.log('Input value:', inputValue);
         let reqUrl: string = baseUrl + `&q=${inputValue}`;
+         // Fetch weather data from the API
         getWeatherData(reqUrl);
     }
 
 /**
- * Get (don’t show) the weather for the user’s entered location in the next 2 weeks.
- * @param url The URL to fetch weather data from.
+ * Fetches weather data from the API based on the provided URL.
+ * Get the weather for the user’s entered location in the next 2 weeks.
+ * @param {string} url The URL to fetch weather data from.
+ * @returns {void}
  */
 function getWeatherData(url:string): void{
     console.log(url )
     fetch(url)
     .then(response => {
+         // Check for valid network response
         if (!response.ok) {
             setResultTitle(false, null);
             console.error('Network response was not ok');
@@ -53,10 +70,10 @@ function getWeatherData(url:string): void{
     .then(data => {
         setResultTitle(true, data);
         console.log(data); 
-        calcAvg(data);
+        calcAvgTemp(data);
     })
     .catch(error => {
-        //add error message
+        // Handle errors
         setResultTitle(false, null);
         console.error('ERROR:', error);
     });
@@ -64,8 +81,9 @@ function getWeatherData(url:string): void{
 
 /**
  * Sets the title based on the success of fetching weather data.
- * @param succeeded A boolean indicating whether the data fetching was successful.
- * @param data The weather data retrieved from the API.
+ * @param {boolean} - succeeded  A boolean indicating whether the data fetching was successful.
+ * @param {any} data -The weather data retrieved from the API.
+ * @returns {void}
  */
 function setResultTitle(succeeded: boolean, data: any): void {
     const resultEle = document.getElementById("resultTitle");
@@ -84,19 +102,25 @@ function setResultTitle(succeeded: boolean, data: any): void {
 
 
 /**
- * Calculates the average temperature for each day of the week over the next 2 weeks.
- * @param {object} data - The weather data retrieved from the API.
+ * Calculate the average temperature for each day of the week based on the provided weather data.
+ * @param {Object} data - The weather data containing forecast information.
+ * @returns {void}
  */
-function calcAvg(data): void{
+function calcAvgTemp(data): void{
+    // Initialize an object to store the average temperatures for each day of the week
     avgValues = {};
-    // Check if data and forecast forecastday exist before proceeding
+
+    // Check if Check if the required data is exist before proceeding
     if (data?.forecast?.forecastday) {
         data.forecast.forecastday.forEach(day => {
+            // Extract the date and day of the week information
             const date = new Date(day.date);
             const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
             const dayOfWeekIndex = date.getUTCDay();
 
+            // Check if the average temperature for the current day of the week already exists
             if (avgValues[dayOfWeekIndex]?.avgTemp !== undefined) {
+                  // Calculate the new average temperature by averaging the current and previous temperatures
                 const prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
                 const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
                 avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
@@ -106,16 +130,18 @@ function calcAvg(data): void{
             else{ // Initialize the avgTemp for the current day if it doesn't exist
                 avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c};
             }
-            //  console.log( day.day.condition.text, day.day.avgtemp_c );
         });
     }
     console.log( avgValues);
+
+    // Build weather cards based on the calculated average temperatures
     buildWeatherCards();
 }
 
 /**
  * Builds the weather cards container and appends weather cards to it.
  * If the cards container already exists, clear its contents
+ * @returns {void}
  */
 function buildWeatherCards(): void{
 
@@ -132,8 +158,8 @@ function buildWeatherCards(): void{
 /**
  * build a new div element for the weather card.
  * and append child elements to it for weather icon, description, and temperature.
- * @param dayData - The data for the day containing name, condition, and average temperature.
- * @returns The constructed weather card element.
+ * @param {any} value - The data for the day containing name, condition, and average temperature.
+ * @returns {HTMLElement} - The constructed weather card element.
  */
     function buildWeatherCard(value: any): HTMLElement{
         const card = getElement('div', avgValues[value].name, '', '', 'weatherCard');
@@ -147,12 +173,13 @@ function buildWeatherCards(): void{
 
    /**
  * Creates an element with optional properties and attributes and returns it.
- * @param tag The type of element to create (e.g., 'label', 'input', 'p').
- * @param text The text content for the new element.
- * @param id The id attribute for the new element.
- * @param type The type attribute for new element.
- * @param className The className attribute for new element.
- * @param eventListener The event listener function to attach to the new element.
+ * @param {string} tag The type of element to create (e.g., 'label', 'input', 'p').
+ * @param {string} text The text content for the new element.
+ * @param {string} id The id attribute for the new element.
+ * @param {string} type The type attribute for new element.
+ * @param {string} className The className attribute for new element.
+ * @param {EventListener} eventListener The event listener function to attach to the new element.
+ * @returns {HTMLElement} -the new element
  */
 function getElement(tag: string, text: string, id?: string, type?: string,
     className?: string, src?: string, eventListener?: EventListener): HTMLElement  {

@@ -1,18 +1,28 @@
-readData();
-function readData() {
+/**
+ * Builds a dynamic weather display element on the webpage.
+ * This function creates a weather div containing input and result sections for users to enter their location
+ * and view the average temperature for the next 2 weeks. It fetches weather data from an API and calculates
+ * the average temperature for each day of the week. It then constructs weather cards for each day,
+ * displaying weather icons, descriptions, and temperatures.
+ * @returns {void}
+ */
+buildDynamicWeatherDiv();
+function buildDynamicWeatherDiv() {
     var avgValues = {};
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
     createWeatherElement();
     /**
-     * Creates a weather element containing input and result sections.
+     * Creates a weather element containing label, input field, and result section.
      * Appends the new div to an existing element in body.
+     * @returns {void}
      */
     function createWeatherElement() {
         var newDiv = getElement('div', '', 'weatherDiv');
         newDiv.appendChild(getElement('label', 'Please enter the wanted location'));
         newDiv.appendChild(getElement('input', '', 'weatherInput', 'text', '', '', onChangeInput));
         newDiv.appendChild(getElement('p', '', 'resultTitle'));
+        // Append the new div to the body of the document
         var bodyElement = document.body;
         if (bodyElement !== null) {
             bodyElement.appendChild(newDiv);
@@ -22,23 +32,29 @@ function readData() {
         }
     }
     /**
-     * This function will be called whenever the user types into the input field.
-     * @param event The change event triggered by the input field.
+     * This function will be called whenever the user change the input field.
+     * @param {Event} event - The change event triggered by the input field.
+     * @returns {void}
      */
     function onChangeInput(event) {
+        //Retrieve user-entered location and construct API URL
         var inputValue = event.target.value;
         console.log('Input value:', inputValue);
         var reqUrl = baseUrl + "&q=".concat(inputValue);
+        // Fetch weather data from the API
         getWeatherData(reqUrl);
     }
     /**
-     * Get (don’t show) the weather for the user’s entered location in the next 2 weeks.
-     * @param url The URL to fetch weather data from.
+     * Fetches weather data from the API based on the provided URL.
+     * Get the weather for the user’s entered location in the next 2 weeks.
+     * @param {string} url The URL to fetch weather data from.
+     * @returns {void}
      */
     function getWeatherData(url) {
         console.log(url);
         fetch(url)
             .then(function (response) {
+            // Check for valid network response
             if (!response.ok) {
                 setResultTitle(false, null);
                 console.error('Network response was not ok');
@@ -48,18 +64,19 @@ function readData() {
             .then(function (data) {
             setResultTitle(true, data);
             console.log(data);
-            calcAvg(data);
+            calcAvgTemp(data);
         })
             .catch(function (error) {
-            //add error message
+            // Handle errors
             setResultTitle(false, null);
             console.error('ERROR:', error);
         });
     }
     /**
      * Sets the title based on the success of fetching weather data.
-     * @param succeeded A boolean indicating whether the data fetching was successful.
-     * @param data The weather data retrieved from the API.
+     * @param {boolean} - succeeded  A boolean indicating whether the data fetching was successful.
+     * @param {any} data -The weather data retrieved from the API.
+     * @returns {void}
      */
     function setResultTitle(succeeded, data) {
         var _a;
@@ -78,20 +95,25 @@ function readData() {
         }
     }
     /**
-     * Calculates the average temperature for each day of the week over the next 2 weeks.
-     * @param {object} data - The weather data retrieved from the API.
+     * Calculate the average temperature for each day of the week based on the provided weather data.
+     * @param {Object} data - The weather data containing forecast information.
+     * @returns {void}
      */
-    function calcAvg(data) {
+    function calcAvgTemp(data) {
         var _a;
+        // Initialize an object to store the average temperatures for each day of the week
         avgValues = {};
-        // Check if data and forecast forecastday exist before proceeding
+        // Check if Check if the required data is exist before proceeding
         if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
             data.forecast.forecastday.forEach(function (day) {
                 var _a, _b;
+                // Extract the date and day of the week information
                 var date = new Date(day.date);
                 var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
                 var dayOfWeekIndex = date.getUTCDay();
+                // Check if the average temperature for the current day of the week already exists
                 if (((_a = avgValues[dayOfWeekIndex]) === null || _a === void 0 ? void 0 : _a.avgTemp) !== undefined) {
+                    // Calculate the new average temperature by averaging the current and previous temperatures
                     var prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
                     var newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
                     avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
@@ -101,15 +123,16 @@ function readData() {
                 else { // Initialize the avgTemp for the current day if it doesn't exist
                     avgValues[dayOfWeekIndex] = { avgTemp: day.day.avgtemp_c };
                 }
-                //  console.log( day.day.condition.text, day.day.avgtemp_c );
             });
         }
         console.log(avgValues);
+        // Build weather cards based on the calculated average temperatures
         buildWeatherCards();
     }
     /**
      * Builds the weather cards container and appends weather cards to it.
      * If the cards container already exists, clear its contents
+     * @returns {void}
      */
     function buildWeatherCards() {
         var _a;
@@ -123,8 +146,8 @@ function readData() {
         /**
          * build a new div element for the weather card.
          * and append child elements to it for weather icon, description, and temperature.
-         * @param dayData - The data for the day containing name, condition, and average temperature.
-         * @returns The constructed weather card element.
+         * @param {any} value - The data for the day containing name, condition, and average temperature.
+         * @returns {HTMLElement} - The constructed weather card element.
          */
         function buildWeatherCard(value) {
             var _a, _b, _c, _d, _e;
@@ -137,12 +160,13 @@ function readData() {
     }
     /**
   * Creates an element with optional properties and attributes and returns it.
-  * @param tag The type of element to create (e.g., 'label', 'input', 'p').
-  * @param text The text content for the new element.
-  * @param id The id attribute for the new element.
-  * @param type The type attribute for new element.
-  * @param className The className attribute for new element.
-  * @param eventListener The event listener function to attach to the new element.
+  * @param {string} tag The type of element to create (e.g., 'label', 'input', 'p').
+  * @param {string} text The text content for the new element.
+  * @param {string} id The id attribute for the new element.
+  * @param {string} type The type attribute for new element.
+  * @param {string} className The className attribute for new element.
+  * @param {EventListener} eventListener The event listener function to attach to the new element.
+  * @returns {HTMLElement} -the new element
   */
     function getElement(tag, text, id, type, className, src, eventListener) {
         var element = document.createElement(tag);
