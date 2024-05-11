@@ -72,8 +72,7 @@ function getWeatherData(url:string): void{
     .then(data => {
         setResultTitle(true, data);
         console.log(data); 
-        //calcAvgTemp(data);
-        testAvg(data)
+        displayAvgWeatherCards(data);
     })
     .catch(error => {
         // Handle errors
@@ -111,15 +110,12 @@ function setResultTitle(succeeded: boolean, data: WeatherData | null): void {
  */
 
 /**
- * saves a map with the avg temp od any day
+ * sets a map with the avg temp of any day
 * Calculate the average temperature for each day of the week based on the provided weather data.
 * @param {WeatherData} data - The weather data containing forecast information.
 * @returns {void}
 */
-function testAvg(data: WeatherData): void{
-    
-    let cardsContainer: HTMLElement = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
-    cardsContainer.innerHTML = "";
+function displayAvgWeatherCards(data: WeatherData): void{
 
     // Initialize a map to store the average temperatures for each day of the week
     avgMap = new Map<number, number>();
@@ -128,31 +124,49 @@ function testAvg(data: WeatherData): void{
 
             const date = new Date(day.date);
             const dayOfWeekIndex = date.getUTCDay();
-            const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
 
            // Check if the average temperature for the current day of the week already exists
             if (typeof dayOfWeekIndex === "number" && avgMap.has(dayOfWeekIndex)) {
                 const avgTemp = avgMap.get(dayOfWeekIndex) || 0;  // Default to 0 if not found
                 const newAvg = (day.day.avgtemp_c + avgTemp) / 2;
                 avgMap.set(dayOfWeekIndex, parseFloat(newAvg.toFixed(2)));
-
-                //Build and append the weather card for the current day
-                let card = buildWeatherCard(dayOfWeekStr, day.day?.condition, avgMap.get(dayOfWeekIndex) as number);
-                cardsContainer?.appendChild(card);
             } else {
                 avgMap.set(dayOfWeekIndex, day.day.avgtemp_c);
             }
         });
     }
     console.log(avgMap)
-    document.getElementById('weatherDiv')?.append(cardsContainer); 
-       
+    buildWeatherCardsByCurrDate(data)
+}
+
 /**
- * build a new div element for the weather card.
- * and append child elements to it for weather icon, description, and temperature.
- * @param {any} cardData - The data for the day containing name, condition, and average temperature.
- * @returns {HTMLElement} - The constructed weather card element.
- */
+ * i want that the first card will be displayed by  today, if today is 
+* sunday so the first card will be sunday and so on
+* i want to get 
+*/
+function buildWeatherCardsByCurrDate(data: WeatherData){
+  
+    let cardsContainer: HTMLElement = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
+    cardsContainer.innerHTML = "";
+    let currDateIndex = (new Date()).getUTCDay();
+
+    let array = data?.forecast?.forecastday;
+    for (let i = currDateIndex+1 ; i< currDateIndex + 8 ; i++){
+        const date = new Date(array[i].date);
+        const dayOfWeekIndex = date.getUTCDay();
+        const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+        let card = buildWeatherCard(dayOfWeekStr, array[i].day?.condition, avgMap.get(dayOfWeekIndex) as number);
+        cardsContainer?.appendChild(card);
+
+    }
+    document.getElementById('weatherDiv')?.append(cardsContainer); 
+    
+    /**
+     * build a new div element for the weather card.
+     * and append child elements to it for weather icon, description, and temperature.
+     * @param {any} cardData - The data for the day containing name, condition, and average temperature.
+     * @returns {HTMLElement} - The constructed weather card element.
+     */
     function buildWeatherCard(dayOfWeekStr: string, cardData: any, avgTemp: number): HTMLElement {
         const card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
         card.appendChild(getElement('img','','','','', 'https:' + cardData?.icon));
@@ -160,9 +174,7 @@ function testAvg(data: WeatherData): void{
         card.appendChild(getElement('span', avgTemp + "&deg"));
         return card;
     }
-
 }
-
    /**
  * Creates an element with optional properties and attributes and returns it.
  * @param {string} tag The type of element to create (e.g., 'label', 'input', 'p').

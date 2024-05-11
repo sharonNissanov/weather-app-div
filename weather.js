@@ -66,8 +66,7 @@ function buildDynamicWeatherDiv() {
             .then(function (data) {
             setResultTitle(true, data);
             console.log(data);
-            //calcAvgTemp(data);
-            testAvg(data);
+            displayAvgWeatherCards(data);
         })
             .catch(function (error) {
             // Handle errors
@@ -103,31 +102,24 @@ function buildDynamicWeatherDiv() {
      * @returns {void}
      */
     /**
-     * saves a map with the avg temp od any day
+     * sets a map with the avg temp of any day
     * Calculate the average temperature for each day of the week based on the provided weather data.
     * @param {WeatherData} data - The weather data containing forecast information.
     * @returns {void}
     */
-    function testAvg(data) {
-        var _a, _b;
-        var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
-        cardsContainer.innerHTML = "";
+    function displayAvgWeatherCards(data) {
+        var _a;
         // Initialize a map to store the average temperatures for each day of the week
         avgMap = new Map();
         if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
             data.forecast.forecastday.forEach(function (day) {
-                var _a;
                 var date = new Date(day.date);
                 var dayOfWeekIndex = date.getUTCDay();
-                var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
                 // Check if the average temperature for the current day of the week already exists
                 if (typeof dayOfWeekIndex === "number" && avgMap.has(dayOfWeekIndex)) {
                     var avgTemp = avgMap.get(dayOfWeekIndex) || 0; // Default to 0 if not found
                     var newAvg = (day.day.avgtemp_c + avgTemp) / 2;
                     avgMap.set(dayOfWeekIndex, parseFloat(newAvg.toFixed(2)));
-                    //Build and append the weather card for the current day
-                    var card = buildWeatherCard(dayOfWeekStr, (_a = day.day) === null || _a === void 0 ? void 0 : _a.condition, avgMap.get(dayOfWeekIndex));
-                    cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
                 }
                 else {
                     avgMap.set(dayOfWeekIndex, day.day.avgtemp_c);
@@ -135,7 +127,29 @@ function buildDynamicWeatherDiv() {
             });
         }
         console.log(avgMap);
-        (_b = document.getElementById('weatherDiv')) === null || _b === void 0 ? void 0 : _b.append(cardsContainer);
+        buildWeatherCardsByCurrDate(data);
+    }
+    /**
+     * i want that the first card will be displayed by  today, if today is
+    * sunday so the first card will be sunday and so on
+    * i want to get
+    */
+    function buildWeatherCardsByCurrDate(data) {
+        var _a, _b, _c;
+        var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
+        cardsContainer.innerHTML = "";
+        var currDateIndex = (new Date()).getUTCDay();
+        console.log("here", currDateIndex);
+        var array = (_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday;
+        for (var i = currDateIndex + 1; i < currDateIndex + 8; i++) {
+            var date = new Date(array[i].date);
+            var dayOfWeekIndex = date.getUTCDay();
+            console.log("vvv", i, dayOfWeekIndex, date.toLocaleString());
+            var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+            var card = buildWeatherCard(dayOfWeekStr, (_b = array[i].day) === null || _b === void 0 ? void 0 : _b.condition, avgMap.get(dayOfWeekIndex));
+            cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
+        }
+        (_c = document.getElementById('weatherDiv')) === null || _c === void 0 ? void 0 : _c.append(cardsContainer);
         /**
          * build a new div element for the weather card.
          * and append child elements to it for weather icon, description, and temperature.
