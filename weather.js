@@ -1,7 +1,7 @@
 /**
  * Builds a dynamic weather display element on the webpage.
  * This function creates a weather div containing input and result sections for users to enter their location
- * and view the weather forecast for the next 2 weeks. It fetches weather data from an API and calculates
+ * and view the average temperature for the next 2 weeks. It fetches weather data from an API and calculates
  * the average temperature for each day of the week. It then constructs weather cards for each day,
  * displaying weather icons, descriptions, and temperatures.
  * @returns {void}
@@ -106,19 +106,19 @@ function buildDynamicWeatherDiv() {
         // Check if Check if the required data is exist before proceeding
         if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
             data.forecast.forecastday.forEach(function (day) {
-                var _a, _b;
+                var _a;
                 // Extract the date and day of the week information
                 var date = new Date(day.date);
                 var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
                 var dayOfWeekIndex = date.getUTCDay();
                 // Check if the average temperature for the current day of the week already exists
-                if (((_a = avgValues[dayOfWeekIndex]) === null || _a === void 0 ? void 0 : _a.avgTemp) !== undefined) {
+                if (avgValues[dayOfWeekIndex] !== undefined && typeof avgValues[dayOfWeekIndex].avgTemp === "number") {
                     // Calculate the new average temperature by averaging the current and previous temperatures
                     var prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
                     var newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
                     avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
                     avgValues[dayOfWeekIndex].name = dayOfWeekStr;
-                    avgValues[dayOfWeekIndex].condition = (_b = day.day) === null || _b === void 0 ? void 0 : _b.condition; //TODO: CHECK IT
+                    avgValues[dayOfWeekIndex].condition = (_a = day.day) === null || _a === void 0 ? void 0 : _a.condition; //TODO: CHECK IT
                 }
                 else { // Initialize the avgTemp for the current day if it doesn't exist
                     avgValues[dayOfWeekIndex] = { avgTemp: day.day.avgtemp_c };

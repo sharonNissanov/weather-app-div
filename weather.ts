@@ -119,7 +119,7 @@ function calcAvgTemp(data: WeatherData): void{
             const dayOfWeekIndex: number = date.getUTCDay();
 
             // Check if the average temperature for the current day of the week already exists
-            if (avgValues[dayOfWeekIndex]?.avgTemp !== undefined) {
+            if (avgValues[dayOfWeekIndex] !== undefined && typeof avgValues[dayOfWeekIndex].avgTemp === "number") {
                   // Calculate the new average temperature by averaging the current and previous temperatures
                 const prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
                 const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
@@ -275,3 +275,15 @@ type WeatherData = {
         }[];
     };
 };
+
+type WeatherAvgForecast = Partial<{
+    [key: number]: {
+        avgTemp: number;
+        name: string;
+        condition: {
+            text: string;
+            icon: string;
+            code: number;
+        };
+    };
+}>; 
