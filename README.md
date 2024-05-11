@@ -3,19 +3,21 @@
 
 # Dynamic Weather Display
 
-The main JavaScript function allows you to create a dynamic weather display on a webpage. It fetches weather data from an API and calculates the average temperature for each day of the week. Then, it constructs weather cards for the upcoming 7 days starting from the current date, displaying weather icons, descriptions, and temperatures.
+The main JavaScript function allows you to create a dynamic weather display on a webpage. 
+It fetches weather data from an API and calculates the average temperature for each day of the week. Then, it constructs weather cards for the upcoming 7 days starting from the current date, 
+displaying weather icons, descriptions, and temperatures.
 
 # Features
-User-Friendly Interface: Provides an intuitive interface for users to enter their location and view weather forecasts.
-Real-Time Data: Fetches weather data from the Weather API, ensuring up-to-date information.
-Dynamic Display: Dynamically updates the weather display based on user input and fetched data.
-Responsive Design: Adapts to different screen sizes and devices for a seamless viewing experience.
-Error Handling: Handles errors gracefully and provides informative messages to users.
+- User-Friendly Interface: Provides an intuitive interface for users to enter their location and view weather forecasts.
+- Real-Time Data: Fetches weather data from the Weather API, ensuring up-to-date information.
+- Dynamic Display: Dynamically updates the weather display based on user input and fetched data.
+- Responsive Design: Adapts to different screen sizes and devices for a seamless viewing experience.
+- Error Handling: Handles errors gracefully and provides informative messages to users.
 
 # Usage
 1. Run the index.html file to see the project in action on your computer.
 2. Include the buildDynamicWeatherDiv() function in your JavaScript code.
-Call buildDynamicWeatherDiv() to create the weather display element on your webpage.
+Call buildDynamicWeatherDiv() to create the weather display element on your webpage (just make sure you to copy the style fron the weather.css file).
 
 # How it Works
 Creating Weather Element: The createWeatherElement() function creates a weather element containing input and result sections for users to enter their location and view the weather forecast.
