@@ -1,4 +1,4 @@
-console.log('hi')
+console.log('hi', window.location)
 injectScriptIntoDiv('');
  function injectScriptIntoDiv(targetID = ""){
     console.log('1')
