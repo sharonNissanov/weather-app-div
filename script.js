@@ -1,5 +1,6 @@
 console.log('hi')
- (function injectScriptIntoDiv(targetID = ""){
+injectScriptIntoDiv('');
+ function injectScriptIntoDiv(targetID = ""){
     console.log('1')
 	var targetElement = getTargetElement(targetID);
     console.log('2')
@@ -74,4 +75,4 @@ console.log('hi')
 		}
 		
 	}
-	})();
+	};
