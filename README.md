@@ -34,8 +34,8 @@ Creating Weather Card: The buildWeatherCard() function constructs a weather card
 Creating HTML Elements: The getElement() function creates HTML elements with optional properties and attributes.
 
 # Function Signatures
- - buildDynamicWeatherDiv(): void: Builds the dynamic weather display element on the webpage.
-createWeatherElement(): void: Creates the weather element containing input and result sections.
+- buildDynamicWeatherDiv(): void: Builds the dynamic weather display element on the webpage.
+- createWeatherElement(): void: Creates the weather element containing input and result sections.
 - onChangeInput(event: Event): void: Handles input change events triggered by the location input field.
 - getWeatherData(url: string): void: Fetches weather data from the Weather API based on the provided URL.
 - setResultTitle(succeeded: boolean, data: WeatherData | null): void: Sets the title based on the success of fetching weather data.
