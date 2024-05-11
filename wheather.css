@@ -7,6 +7,10 @@ html{
     margin-bottom: 20px;
 }
 
+#weatherDiv label{
+    padding: 0 5px;
+}
+
 #weatherInput {
     width: 200px;
     padding: 10px;
@@ -22,7 +26,10 @@ html{
     border-color: dodgerblue;
 }
 
-
+#weatherDiv p{
+    padding: 0 8px;
+    margin: 0;
+}
 #cardsContainer {
     display: flex;
     /* flex-wrap: wrap; */
