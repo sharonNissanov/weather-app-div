@@ -1,16 +1,15 @@
 readData();
 function readData() :void{
     let avgValues = {};
-    const urlParams = new URLSearchParams(window.location.search);
+    //const urlParams = new URLSearchParams(window.location.search);
     const API_KEY: string = '2cc48dd34be6452386a130925240905';
     const baseUrl:string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
-    var id = urlParams.get('divId');
-    console.log(id)
-    let parentElement: HTMLElement | null;
+   // var id = urlParams.get('divId');
+   // console.log(id)
+    
     createWeatherElement();
-    let params = `&q=${id}`;
-    console.log(baseUrl+params, id  )
-
+   // let params = `&q=${id}`;
+    
 
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() : void{
@@ -18,29 +17,11 @@ function readData() :void{
         newDiv.id = 'weatherDiv';
         addLabel(newDiv);
         addInput(newDiv);
-        parentElement = getTargetElement();
-        if(parentElement !== null){
-            parentElement.appendChild(newDiv);
+        let bodyElement: HTMLElement | null = document.getElementsByTagName('body')[0];
+        if(bodyElement !== null){
+            bodyElement.appendChild(newDiv);
         }
       //else error
-    }
-
-    //return the target element
-    function getTargetElement() : HTMLElement | null  {
-        let valid = isValidId();
-        if(typeof id === 'string' && valid ){ 
-            return document.getElementById(id);
-        }
-        return document.getElementsByTagName('body')[0];
-    }
-
-    //return true if there's an element with the specified ids in the document.
-    function isValidId(): boolean {
-        // Check if the id is a non-empty string
-        if (typeof id !== 'string' || id.trim() === '') {
-            return false;
-        } 
-        return document.getElementById(id) !== null;
     }
 
     function addLabel(parentEle): void{
@@ -69,6 +50,7 @@ function readData() :void{
 
      // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
     function getWeatherData(url:string){
+        console.log(url )
         fetch(url)
         .then(response => {
           

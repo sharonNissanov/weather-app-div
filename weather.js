@@ -1,42 +1,24 @@
 readData();
 function readData() {
     var avgValues = {};
-    var urlParams = new URLSearchParams(window.location.search);
+    //const urlParams = new URLSearchParams(window.location.search);
     var API_KEY = '2cc48dd34be6452386a130925240905';
     var baseUrl = "https://api.weatherapi.com/v1/forecast.json?key=".concat(API_KEY, "&days=14&aqi=no");
-    var id = urlParams.get('divId');
-    console.log(id);
-    var parentElement;
+    // var id = urlParams.get('divId');
+    // console.log(id)
     createWeatherElement();
-    var params = "&q=".concat(id);
-    console.log(baseUrl + params, id);
+    // let params = `&q=${id}`;
     // Set properties and attributes for the div element Append the new div to an existing element in the DOM or body
     function createWeatherElement() {
         var newDiv = document.createElement('div');
         newDiv.id = 'weatherDiv';
         addLabel(newDiv);
         addInput(newDiv);
-        parentElement = getTargetElement();
-        if (parentElement !== null) {
-            parentElement.appendChild(newDiv);
+        var bodyElement = document.getElementsByTagName('body')[0];
+        if (bodyElement !== null) {
+            bodyElement.appendChild(newDiv);
         }
         //else error
-    }
-    //return the target element
-    function getTargetElement() {
-        var valid = isValidId();
-        if (typeof id === 'string' && valid) {
-            return document.getElementById(id);
-        }
-        return document.getElementsByTagName('body')[0];
-    }
-    //return true if there's an element with the specified ids in the document.
-    function isValidId() {
-        // Check if the id is a non-empty string
-        if (typeof id !== 'string' || id.trim() === '') {
-            return false;
-        }
-        return document.getElementById(id) !== null;
     }
     function addLabel(parentEle) {
         var label = document.createElement('label');
@@ -61,6 +43,7 @@ function readData() {
     }
     // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
     function getWeatherData(url) {
+        console.log(url);
         fetch(url)
             .then(function (response) {
             if (!response.ok) {
