@@ -130,36 +130,40 @@ function buildDynamicWeatherDiv() {
         buildWeatherCardsByCurrDate(data);
     }
     /**
-     * i want that the first card will be displayed by  today, if today is
-    * sunday so the first card will be sunday and so on
-    * i want to get
-    */
+     * Builds weather cards for the upcoming 7 days starting from the current date.
+     * Appends the constructed cards to the specified container element in the DOM.
+     * @param {WeatherData} data - The weather data containing forecast information.
+     * @returns {void}
+     */
     function buildWeatherCardsByCurrDate(data) {
         var _a, _b, _c;
+        // Get or create the cards container element
         var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
         cardsContainer.innerHTML = "";
+        // Get the current day index (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
         var currDateIndex = (new Date()).getUTCDay();
-        console.log("here", currDateIndex);
-        var array = (_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday;
-        for (var i = currDateIndex + 1; i < currDateIndex + 8; i++) {
-            var date = new Date(array[i].date);
-            var dayOfWeekIndex = date.getUTCDay();
-            console.log("vvv", i, dayOfWeekIndex, date.toLocaleString());
+        // Extract the forecast data for the upcoming 7 days starting from the next day
+        var forecastDays = (_b = (_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) === null || _b === void 0 ? void 0 : _b.slice(currDateIndex + 1, currDateIndex + 8);
+        // Iterate over the forecast data and build weather cards for each day
+        forecastDays === null || forecastDays === void 0 ? void 0 : forecastDays.forEach(function (day) {
+            var _a, _b, _c, _d;
+            var date = new Date(day.date);
             var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
-            var card = buildWeatherCard(dayOfWeekStr, (_b = array[i].day) === null || _b === void 0 ? void 0 : _b.condition, avgMap.get(dayOfWeekIndex));
+            var card = buildWeatherCard(dayOfWeekStr, (_b = (_a = day.day) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.icon, (_d = (_c = day.day) === null || _c === void 0 ? void 0 : _c.condition) === null || _d === void 0 ? void 0 : _d.text, avgMap.get(date.getUTCDay()));
             cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
-        }
+        });
         (_c = document.getElementById('weatherDiv')) === null || _c === void 0 ? void 0 : _c.append(cardsContainer);
         /**
-         * build a new div element for the weather card.
-         * and append child elements to it for weather icon, description, and temperature.
-         * @param {any} cardData - The data for the day containing name, condition, and average temperature.
-         * @returns {HTMLElement} - The constructed weather card element.
-         */
-        function buildWeatherCard(dayOfWeekStr, cardData, avgTemp) {
+           * Builds a weather card element for a specific day.
+           * @param {string} dayOfWeekStr - The day of the week string (e.g., "Mon", "Tue").
+           * @param {string} imgSrc - The source URL of the weather icon for the day.
+           * @param {string} text - The description of the weather condition for the day.
+           * @returns {HTMLElement} - The constructed weather card element.
+           */
+        function buildWeatherCard(dayOfWeekStr, imgSrc, text, avgTemp) {
             var card = getElement('div', dayOfWeekStr, '', '', 'weatherCard');
-            card.appendChild(getElement('img', '', '', '', '', 'https:' + (cardData === null || cardData === void 0 ? void 0 : cardData.icon)));
-            card.appendChild(getElement('span', cardData === null || cardData === void 0 ? void 0 : cardData.text));
+            card.appendChild(getElement('img', '', '', '', '', 'https:' + imgSrc));
+            card.appendChild(getElement('span', text));
             card.appendChild(getElement('span', avgTemp + "&deg"));
             return card;
         }
