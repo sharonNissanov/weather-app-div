@@ -57,7 +57,10 @@ function readData() {
         var reqUrl = baseUrl + "&q=".concat(inputValue);
         getWeatherData(reqUrl);
     }
-    // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
+    /**
+     * Get (don’t show) the weather for the user’s entered location in the next 2 weeks.
+     * @param url The URL to fetch weather data from.
+     */
     function getWeatherData(url) {
         console.log(url);
         fetch(url)
@@ -79,6 +82,11 @@ function readData() {
             console.error('ERROR:', error);
         });
     }
+    /**
+     * Sets the title based on the success of fetching weather data.
+     * @param succeeded A boolean indicating whether the data fetching was successful.
+     * @param data The weather data retrieved from the API.
+     */
     function setResultTitle(succeeded, data) {
         var _a;
         var resultEle = document.getElementById("resultTitle");
@@ -95,7 +103,10 @@ function readData() {
             }
         }
     }
-    //For each day of the week, show the average temperature for the next 2 weeks.
+    /**
+     * Calculates the average temperature for each day of the week over the next 2 weeks.
+     * @param {object} data - The weather data retrieved from the API.
+     */
     function calcAvg(data) {
         var _a;
         avgValues = {};

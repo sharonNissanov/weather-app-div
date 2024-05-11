@@ -62,90 +62,101 @@ function addElement(parentEle: HTMLDivElement, tag: string, text: string, id?: s
         getWeatherData(reqUrl);
     }
 
-     // Get (don’t show) the weather for the user’s entered location in the next 2 weeks
-    function getWeatherData(url:string): void{
-        console.log(url )
-        fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                setResultTitle(false, null);
-                console.error('Network response was not ok');
-            }
-            return response.json(); 
-        })
-        .then(data => {
-            setResultTitle(true, data);
-            console.log(data); 
-            calcAvg(data);
-        })
-        .catch(error => {
-            //add error message
+/**
+ * Get (don’t show) the weather for the user’s entered location in the next 2 weeks.
+ * @param url The URL to fetch weather data from.
+ */
+function getWeatherData(url:string): void{
+    console.log(url )
+    fetch(url)
+    .then(response => {
+        if (!response.ok) {
             setResultTitle(false, null);
-            console.error('ERROR:', error);
+            console.error('Network response was not ok');
+        }
+        return response.json(); 
+    })
+    .then(data => {
+        setResultTitle(true, data);
+        console.log(data); 
+        calcAvg(data);
+    })
+    .catch(error => {
+        //add error message
+        setResultTitle(false, null);
+        console.error('ERROR:', error);
+    });
+}
+
+/**
+ * Sets the title based on the success of fetching weather data.
+ * @param succeeded A boolean indicating whether the data fetching was successful.
+ * @param data The weather data retrieved from the API.
+ */
+function setResultTitle(succeeded: boolean, data: any): void {
+    const resultEle = document.getElementById("resultTitle");
+    if (resultEle) {
+        if (succeeded && data?.location?.name) {
+            resultEle.innerText = `The average temperature for the next 2 weeks in ${data.location.name}`;
+        } else {
+            resultEle.innerText = "Something went wrong, please try again";
+            const cardsContainer = document.getElementById("cardsContainer");
+            if(cardsContainer){
+                (cardsContainer as HTMLElement ).innerHTML = "";
+            }
+        }
+    }
+}
+
+
+/**
+ * Calculates the average temperature for each day of the week over the next 2 weeks.
+ * @param {object} data - The weather data retrieved from the API.
+ */
+function calcAvg(data){
+    avgValues = {};
+    // Check if data and forecast forecastday exist before proceeding
+    if (data?.forecast?.forecastday) {
+        data.forecast.forecastday.forEach(day => {
+            const date = new Date(day.date);
+            const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const dayOfWeekIndex = date.getUTCDay();
+
+            if (avgValues[dayOfWeekIndex]?.avgTemp !== undefined) {
+                const prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
+                const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
+                avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
+                avgValues[dayOfWeekIndex].name = dayOfWeekStr;
+                avgValues[dayOfWeekIndex].condition =  day.day?.condition; //TODO: CHECK IT
+            }
+            else{ // Initialize the avgTemp for the current day if it doesn't exist
+                avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c};
+            }
+            //  console.log( day.day.condition.text, day.day.avgtemp_c );
         });
     }
+    console.log( avgValues);
+    buildWeatherCards();
+}
 
-    function setResultTitle(succeeded: boolean, data: any): void {
-        const resultEle = document.getElementById("resultTitle");
-        if (resultEle) {
-            if (succeeded && data?.location?.name) {
-                resultEle.innerText = `The average temperature for the next 2 weeks in ${data.location.name}`;
-            } else {
-                resultEle.innerText = "Something went wrong, please try again";
-                const cardsContainer = document.getElementById("cardsContainer");
-                if(cardsContainer){
-                    (cardsContainer as HTMLElement ).innerHTML = "";
-                }
-            }
-        }
-    }
+//create Weather Cards container 
+function buildWeatherCards(): void{
+    let cardsContainer:  HTMLElement | null= document.getElementById("cardsContainer");
+    if(document.getElementById("cardsContainer") !== null ){
+        (cardsContainer as HTMLElement ).innerHTML = "";
+    }else{
+        cardsContainer = document.createElement('div');
+        cardsContainer.id = "cardsContainer";
+    } 
 
+    Object.keys(avgValues).forEach(value=>{
+        let card = buildWeatherCard(value);
+        cardsContainer?.appendChild(card);
+    })
 
-    //For each day of the week, show the average temperature for the next 2 weeks.
-    function calcAvg(data){
-        avgValues = {};
-        // Check if data and forecast forecastday exist before proceeding
-        if (data?.forecast?.forecastday) {
-            data.forecast.forecastday.forEach(day => {
-                const date = new Date(day.date);
-                const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
-                const dayOfWeekIndex = date.getUTCDay();
-    
-                if (avgValues[dayOfWeekIndex]?.avgTemp !== undefined) {
-                    const prevAvgTemp = avgValues[dayOfWeekIndex].avgTemp;
-                    const newAvgTemp = (prevAvgTemp + day.day.avgtemp_c) / 2;
-                    avgValues[dayOfWeekIndex].avgTemp = parseFloat(newAvgTemp.toFixed(2));
-                    avgValues[dayOfWeekIndex].name = dayOfWeekStr;
-                    avgValues[dayOfWeekIndex].condition =  day.day?.condition; //TODO: CHECK IT
-                }
-                else{ // Initialize the avgTemp for the current day if it doesn't exist
-                    avgValues[dayOfWeekIndex] = {avgTemp: day.day.avgtemp_c};
-                }
-              //  console.log( day.day.condition.text, day.day.avgtemp_c );
-            });
-        }
-        console.log( avgValues);
-        buildWeatherCards();
-    }
+    document.getElementById('weatherDiv')?.append(cardsContainer  as HTMLElement ); 
 
-    //create Weather Cards container 
-    function buildWeatherCards(): void{
-        let cardsContainer:  HTMLElement | null= document.getElementById("cardsContainer");
-        if(document.getElementById("cardsContainer") !== null ){
-            (cardsContainer as HTMLElement ).innerHTML = "";
-        }else{
-            cardsContainer = document.createElement('div');
-            cardsContainer.id = "cardsContainer";
-        } 
-
-        Object.keys(avgValues).forEach(value=>{
-            let card = buildWeatherCard(value);
-            cardsContainer?.appendChild(card);
-        })
-
-       document.getElementById('weatherDiv')?.append(cardsContainer  as HTMLElement ); 
-
-       function buildWeatherCard(value: any): HTMLDivElement{
+    function buildWeatherCard(value: any): HTMLDivElement{
         let card = document.createElement('div');
         card.className = 'weatherCard';
         card.textContent = avgValues[value].name;
@@ -153,25 +164,25 @@ function addElement(parentEle: HTMLDivElement, tag: string, text: string, id?: s
         card.appendChild(getDesc(value));
         card.appendChild(getTemp(value));
         return card;
-       }
+    }
 
-       function getIcon(value): HTMLImageElement {
+    function getIcon(value): HTMLImageElement {
         let icon = document.createElement('img');
         icon.src = 'https:' + avgValues[value]?.condition?.icon;
         return icon;
-       }
+    }
 
-       function getDesc(value): HTMLSpanElement{
+    function getDesc(value): HTMLSpanElement{
         let desc = document.createElement('span');
         desc.innerHTML = avgValues[value]?.condition?.text;
         return desc;
-       }
+    }
 
-       function getTemp(value): HTMLSpanElement{
+    function getTemp(value): HTMLSpanElement{
         let desc = document.createElement('span');
         desc.innerHTML = avgValues[value]?.avgTemp + "&deg";
         return desc;
-       }
     }
+}
   
 };
