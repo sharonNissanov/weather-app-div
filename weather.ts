@@ -2,7 +2,7 @@ readData();
 function readData() :void{
     let avgValues = {};
     const API_KEY: string = '2cc48dd34be6452386a130925240905';
-    const baseUrl:string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
+    const baseUrl: string = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=14&aqi=no`;
 
     createWeatherElement();
 
@@ -11,11 +11,10 @@ function readData() :void{
  * Appends the new div to an existing element in body.
  */
 function createWeatherElement(): void {
-    const newDiv: HTMLDivElement = document.createElement('div');
-    newDiv.id = 'weatherDiv';
-    addElement(newDiv, 'label', 'Please enter the wanted location');
-    addElement(newDiv, 'input', '', 'weatherInput', 'text','', '', onChangeInput);
-    addElement(newDiv, 'p', '', 'resultTitle');
+    const newDiv:HTMLElement = getElement('div', '','weatherDiv');
+    newDiv.appendChild(getElement('label', 'Please enter the wanted location'));
+    newDiv.appendChild(getElement('input', '', 'weatherInput', 'text','', '', onChangeInput));
+    newDiv.appendChild(getElement('p', '', 'resultTitle'));
     
     const bodyElement: HTMLElement | null = document.body;
     if (bodyElement !== null) {
@@ -114,14 +113,13 @@ function calcAvg(data){
     buildWeatherCards();
 }
 
-//create Weather Cards container 
+
 function buildWeatherCards(): void{
     let cardsContainer:  HTMLElement | null= document.getElementById("cardsContainer");
     if(document.getElementById("cardsContainer") !== null ){
         (cardsContainer as HTMLElement ).innerHTML = "";
     }else{
-        cardsContainer = document.createElement('div');
-        cardsContainer.id = "cardsContainer";
+        cardsContainer = getElement('div','', "cardsContainer" );
     } 
 
     Object.keys(avgValues).forEach(value=>{
@@ -131,21 +129,18 @@ function buildWeatherCards(): void{
 
     document.getElementById('weatherDiv')?.append(cardsContainer  as HTMLElement ); 
 
-    function buildWeatherCard(value: any): HTMLDivElement{
-        let card = document.createElement('div');
-        card.className = 'weatherCard';
-        card.textContent = avgValues[value].name;
-        addElement(card, 'img','','','','', 'https:' + avgValues[value]?.condition?.icon);
-        addElement(card, 'span', avgValues[value]?.condition?.text);
-        addElement(card, 'span', avgValues[value]?.avgTemp + "&deg");
+    function buildWeatherCard(value: any): HTMLElement{
+        const card = getElement('div', avgValues[value].name, '', '', 'weatherCard');
+        card.appendChild(getElement('img','','','','', 'https:' + avgValues[value]?.condition?.icon));
+        card.appendChild(getElement('span', avgValues[value]?.condition?.text));
+        card.appendChild(getElement('span', avgValues[value]?.avgTemp + "&deg"));
         return card;
     }
 
 }
 
    /**
- * Adds an element to a parent element with optional properties and attributes.
- * @param parentEle The parent element to append the new element to.
+ * Creates an element with optional properties and attributes and returns it.
  * @param tag The type of element to create (e.g., 'label', 'input', 'p').
  * @param text The text content for the new element.
  * @param id The id attribute for the new element.
@@ -153,8 +148,8 @@ function buildWeatherCards(): void{
  * @param className The className attribute for new element.
  * @param eventListener The event listener function to attach to the new element.
  */
-function addElement(parentEle: HTMLDivElement, tag: string, text: string, id?: string, type?: string,
-    className?: string, src?: string, eventListener?: EventListener): void {
+function getElement(tag: string, text: string, id?: string, type?: string,
+    className?: string, src?: string, eventListener?: EventListener): HTMLElement  {
     const element = document.createElement(tag);
     if (id) {
         element.id = id;
@@ -175,6 +170,7 @@ function addElement(parentEle: HTMLDivElement, tag: string, text: string, id?: s
     if (eventListener) {
         element.addEventListener('change', eventListener);
     }
-    parentEle.appendChild(element);
+
+    return element;
 }
 };

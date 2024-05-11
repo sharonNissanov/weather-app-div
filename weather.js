@@ -9,11 +9,10 @@ function readData() {
      * Appends the new div to an existing element in body.
      */
     function createWeatherElement() {
-        var newDiv = document.createElement('div');
-        newDiv.id = 'weatherDiv';
-        addElement(newDiv, 'label', 'Please enter the wanted location');
-        addElement(newDiv, 'input', '', 'weatherInput', 'text', '', '', onChangeInput);
-        addElement(newDiv, 'p', '', 'resultTitle');
+        var newDiv = getElement('div', '', 'weatherDiv');
+        newDiv.appendChild(getElement('label', 'Please enter the wanted location'));
+        newDiv.appendChild(getElement('input', '', 'weatherInput', 'text', '', '', onChangeInput));
+        newDiv.appendChild(getElement('p', '', 'resultTitle'));
         var bodyElement = document.body;
         if (bodyElement !== null) {
             bodyElement.appendChild(newDiv);
@@ -108,7 +107,6 @@ function readData() {
         console.log(avgValues);
         buildWeatherCards();
     }
-    //create Weather Cards container 
     function buildWeatherCards() {
         var _a;
         var cardsContainer = document.getElementById("cardsContainer");
@@ -116,8 +114,7 @@ function readData() {
             cardsContainer.innerHTML = "";
         }
         else {
-            cardsContainer = document.createElement('div');
-            cardsContainer.id = "cardsContainer";
+            cardsContainer = getElement('div', '', "cardsContainer");
         }
         Object.keys(avgValues).forEach(function (value) {
             var card = buildWeatherCard(value);
@@ -126,18 +123,15 @@ function readData() {
         (_a = document.getElementById('weatherDiv')) === null || _a === void 0 ? void 0 : _a.append(cardsContainer);
         function buildWeatherCard(value) {
             var _a, _b, _c, _d, _e;
-            var card = document.createElement('div');
-            card.className = 'weatherCard';
-            card.textContent = avgValues[value].name;
-            addElement(card, 'img', '', '', '', '', 'https:' + ((_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.icon));
-            addElement(card, 'span', (_d = (_c = avgValues[value]) === null || _c === void 0 ? void 0 : _c.condition) === null || _d === void 0 ? void 0 : _d.text);
-            addElement(card, 'span', ((_e = avgValues[value]) === null || _e === void 0 ? void 0 : _e.avgTemp) + "&deg");
+            var card = getElement('div', avgValues[value].name, '', '', 'weatherCard');
+            card.appendChild(getElement('img', '', '', '', '', 'https:' + ((_b = (_a = avgValues[value]) === null || _a === void 0 ? void 0 : _a.condition) === null || _b === void 0 ? void 0 : _b.icon)));
+            card.appendChild(getElement('span', (_d = (_c = avgValues[value]) === null || _c === void 0 ? void 0 : _c.condition) === null || _d === void 0 ? void 0 : _d.text));
+            card.appendChild(getElement('span', ((_e = avgValues[value]) === null || _e === void 0 ? void 0 : _e.avgTemp) + "&deg"));
             return card;
         }
     }
     /**
-  * Adds an element to a parent element with optional properties and attributes.
-  * @param parentEle The parent element to append the new element to.
+  * Creates an element with optional properties and attributes and returns it.
   * @param tag The type of element to create (e.g., 'label', 'input', 'p').
   * @param text The text content for the new element.
   * @param id The id attribute for the new element.
@@ -145,7 +139,7 @@ function readData() {
   * @param className The className attribute for new element.
   * @param eventListener The event listener function to attach to the new element.
   */
-    function addElement(parentEle, tag, text, id, type, className, src, eventListener) {
+    function getElement(tag, text, id, type, className, src, eventListener) {
         var element = document.createElement(tag);
         if (id) {
             element.id = id;
@@ -165,7 +159,7 @@ function readData() {
         if (eventListener) {
             element.addEventListener('change', eventListener);
         }
-        parentEle.appendChild(element);
+        return element;
     }
 }
 ;
