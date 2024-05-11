@@ -1,3 +1,5 @@
+// @ts-ignore
+/// <reference lib="es2015" />
 /**
  * Builds a dynamic weather display element on the webpage.
  * This function creates a weather div containing input and result sections for users to enter their location
@@ -94,6 +96,29 @@ function buildDynamicWeatherDiv() {
             }
         }
     }
+    function testAvg(data) {
+        var _a;
+        var avgMap = new Map();
+        var res = new Map();
+        if ((_a = data === null || data === void 0 ? void 0 : data.forecast) === null || _a === void 0 ? void 0 : _a.forecastday) {
+            data.forecast.forecastday.forEach(function (day) {
+                var date = new Date(day.date);
+                var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+                var dayOfWeekIndex = date.getUTCDay();
+                // console.log('test', dayOfWeekIndex, avgMap[dayOfWeekIndex], day.day.avgtemp_c)
+                if (typeof dayOfWeekIndex === "number" && avgMap.has(dayOfWeekIndex)) {
+                    var avgTemp = avgMap.get(dayOfWeekIndex) || 0; //
+                    var newAvg = (day.day.avgtemp_c + avgTemp) / 2;
+                    avgMap.set(dayOfWeekIndex, parseFloat(newAvg.toFixed(2)));
+                }
+                else {
+                    avgMap.set(dayOfWeekIndex, day.day.avgtemp_c);
+                }
+            });
+        }
+        console.log(avgMap);
+        // console.log('----------------------------------------------------')
+    }
     /**
      * Calculate the average temperature for each day of the week based on the provided weather data.
      * @param {WeatherData} data - The weather data containing forecast information.
@@ -101,6 +126,7 @@ function buildDynamicWeatherDiv() {
      */
     function calcAvgTemp(data) {
         var _a;
+        testAvg(data);
         // Initialize an object to store the average temperatures for each day of the week
         avgValues = {};
         // Check if Check if the required data is exist before proceeding
@@ -111,6 +137,7 @@ function buildDynamicWeatherDiv() {
                 var date = new Date(day.date);
                 var dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
                 var dayOfWeekIndex = date.getUTCDay();
+                // console.log('org', dayOfWeekIndex, day.day.avgtemp_c)
                 // Check if the average temperature for the current day of the week already exists
                 if (avgValues[dayOfWeekIndex] !== undefined && typeof avgValues[dayOfWeekIndex].avgTemp === "number") {
                     // Calculate the new average temperature by averaging the current and previous temperatures

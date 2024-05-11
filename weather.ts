@@ -1,3 +1,5 @@
+// @ts-ignore
+/// <reference lib="es2015" />
 
 /**
  * Builds a dynamic weather display element on the webpage.
@@ -101,12 +103,37 @@ function setResultTitle(succeeded: boolean, data: WeatherData | null): void {
 }
 
 
+function testAvg(data: WeatherData){
+    
+    let avgMap = new Map<number, number>();
+
+    const res = new Map<number, number>();
+    if (data?.forecast?.forecastday) {
+        data.forecast.forecastday.forEach(day => {
+            const date = new Date(day.date);
+            const dayOfWeekStr = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const dayOfWeekIndex = date.getUTCDay();
+           // console.log('test', dayOfWeekIndex, avgMap[dayOfWeekIndex], day.day.avgtemp_c)
+            if (typeof dayOfWeekIndex === "number" && avgMap.has(dayOfWeekIndex)) {
+                const avgTemp = avgMap.get(dayOfWeekIndex) || 0; //
+                const newAvg = (day.day.avgtemp_c + avgTemp) / 2;
+                avgMap.set(dayOfWeekIndex, parseFloat(newAvg.toFixed(2)));
+            } else {
+                avgMap.set(dayOfWeekIndex, day.day.avgtemp_c);
+            }
+        });
+    }
+    console.log(avgMap)
+
+}
+
 /**
  * Calculate the average temperature for each day of the week based on the provided weather data.
  * @param {WeatherData} data - The weather data containing forecast information.
  * @returns {void}
  */
 function calcAvgTemp(data: WeatherData): void{
+    testAvg(data)
     // Initialize an object to store the average temperatures for each day of the week
     avgValues = {};
 
@@ -117,7 +144,7 @@ function calcAvgTemp(data: WeatherData): void{
             const date: Date = new Date(day.date);
             const dayOfWeekStr:string = date.toLocaleDateString('en-US', { weekday: 'short' });
             const dayOfWeekIndex: number = date.getUTCDay();
-
+           // console.log('org', dayOfWeekIndex, day.day.avgtemp_c)
             // Check if the average temperature for the current day of the week already exists
             if (avgValues[dayOfWeekIndex] !== undefined && typeof avgValues[dayOfWeekIndex].avgTemp === "number") {
                   // Calculate the new average temperature by averaging the current and previous temperatures
