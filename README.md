@@ -13,11 +13,11 @@ Responsive Design: Adapts to different screen sizes and devices for a seamless v
 Error Handling: Handles errors gracefully and provides informative messages to users.
 
 # Usage
-1. Run the index.html file to see the project in action on your computer.
-2. Include the buildDynamicWeatherDiv() function in your JavaScript code.
+1. Run the index.html file to see the project in action on your computer.\
+2. Include the buildDynamicWeatherDiv() function in your JavaScript code.\
 Call buildDynamicWeatherDiv() to create the weather display element on your webpage.
 
-#How it Works
+# How it Works
 Creating Weather Element: The createWeatherElement() function creates a weather element containing input and result sections for users to enter their location and view the weather forecast.
 
 Fetching Weather Data: The getWeatherData() function fetches weather data from the Weather API based on the user's location input. It handles errors and displays appropriate messages.
@@ -33,7 +33,7 @@ Creating Weather Card: The buildWeatherCard() function constructs a weather card
 
 Creating HTML Elements: The getElement() function creates HTML elements with optional properties and attributes.
 
-Function Signatures
+# Function Signatures
 buildDynamicWeatherDiv(): void: Builds the dynamic weather display element on the webpage.
 createWeatherElement(): void: Creates the weather element containing input and result sections.
 onChangeInput(event: Event): void: Handles input change events triggered by the location input field.
@@ -44,7 +44,7 @@ buildWeatherCardsByCurrDate(data: WeatherData): void: Builds weather cards for t
 buildWeatherCard(dayOfWeekStr: string, imgSrc: string, text: string, avgTemp: number): HTMLElement: Constructs a weather card element for a specific day.
 getElement(tag: string, text: string, id?: string, type?: string, className?: string, src?: string, eventListener?: EventListener): HTMLElement: Creates an HTML element with optional properties and attributes.
 
-Weather Data Type
+# Weather Data Type
 The WeatherData type represents the structure of the weather data retrieved from the Weather API.
 type WeatherData = {
     location: {
@@ -68,7 +68,7 @@ type WeatherData = {
     };
 };
 
-Requirements
+# Requirements
 Internet connection to fetch weather data from the Weather API.
 Access to the Weather API with a valid API key.
 Feel free to customize and integrate this dynamic weather display into your web projects!
