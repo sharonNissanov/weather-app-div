@@ -107,20 +107,25 @@ function readData() {
         console.log(avgValues);
         buildWeatherCards();
     }
+    /**
+     * Builds the weather cards container and appends weather cards to it.
+     * If the cards container already exists, clear its contents
+     */
     function buildWeatherCards() {
         var _a;
-        var cardsContainer = document.getElementById("cardsContainer");
-        if (document.getElementById("cardsContainer") !== null) {
-            cardsContainer.innerHTML = "";
-        }
-        else {
-            cardsContainer = getElement('div', '', "cardsContainer");
-        }
+        var cardsContainer = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
+        cardsContainer.innerHTML = "";
         Object.keys(avgValues).forEach(function (value) {
             var card = buildWeatherCard(value);
             cardsContainer === null || cardsContainer === void 0 ? void 0 : cardsContainer.appendChild(card);
         });
         (_a = document.getElementById('weatherDiv')) === null || _a === void 0 ? void 0 : _a.append(cardsContainer);
+        /**
+         * build a new div element for the weather card.
+         * and append child elements to it for weather icon, description, and temperature.
+         * @param dayData - The data for the day containing name, condition, and average temperature.
+         * @returns The constructed weather card element.
+         */
         function buildWeatherCard(value) {
             var _a, _b, _c, _d, _e;
             var card = getElement('div', avgValues[value].name, '', '', 'weatherCard');
@@ -153,7 +158,7 @@ function readData() {
         if (className) {
             element.className = className;
         }
-        if (src) {
+        if (tag === 'img' && src) {
             element.src = src;
         }
         if (eventListener) {

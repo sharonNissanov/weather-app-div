@@ -30,9 +30,9 @@ function createWeatherElement(): void {
  * @param event The change event triggered by the input field.
  */
     function onChangeInput(event: Event): void{
-        const inputValue = (event.target as HTMLInputElement).value;
+        const inputValue: string = (event.target as HTMLInputElement).value;
         console.log('Input value:', inputValue);
-        let reqUrl = baseUrl + `&q=${inputValue}`;
+        let reqUrl: string = baseUrl + `&q=${inputValue}`;
         getWeatherData(reqUrl);
     }
 
@@ -87,7 +87,7 @@ function setResultTitle(succeeded: boolean, data: any): void {
  * Calculates the average temperature for each day of the week over the next 2 weeks.
  * @param {object} data - The weather data retrieved from the API.
  */
-function calcAvg(data){
+function calcAvg(data): void{
     avgValues = {};
     // Check if data and forecast forecastday exist before proceeding
     if (data?.forecast?.forecastday) {
@@ -113,22 +113,28 @@ function calcAvg(data){
     buildWeatherCards();
 }
 
-
+/**
+ * Builds the weather cards container and appends weather cards to it.
+ * If the cards container already exists, clear its contents
+ */
 function buildWeatherCards(): void{
-    let cardsContainer:  HTMLElement | null= document.getElementById("cardsContainer");
-    if(document.getElementById("cardsContainer") !== null ){
-        (cardsContainer as HTMLElement ).innerHTML = "";
-    }else{
-        cardsContainer = getElement('div','', "cardsContainer" );
-    } 
+
+   let cardsContainer: HTMLElement = document.getElementById("cardsContainer") || getElement('div', '', 'cardsContainer');
+   cardsContainer.innerHTML = "";
 
     Object.keys(avgValues).forEach(value=>{
         let card = buildWeatherCard(value);
         cardsContainer?.appendChild(card);
     })
 
-    document.getElementById('weatherDiv')?.append(cardsContainer  as HTMLElement ); 
+    document.getElementById('weatherDiv')?.append(cardsContainer); 
 
+/**
+ * build a new div element for the weather card.
+ * and append child elements to it for weather icon, description, and temperature.
+ * @param dayData - The data for the day containing name, condition, and average temperature.
+ * @returns The constructed weather card element.
+ */
     function buildWeatherCard(value: any): HTMLElement{
         const card = getElement('div', avgValues[value].name, '', '', 'weatherCard');
         card.appendChild(getElement('img','','','','', 'https:' + avgValues[value]?.condition?.icon));
@@ -150,7 +156,7 @@ function buildWeatherCards(): void{
  */
 function getElement(tag: string, text: string, id?: string, type?: string,
     className?: string, src?: string, eventListener?: EventListener): HTMLElement  {
-    const element = document.createElement(tag);
+    const element: HTMLElement  = document.createElement(tag);
     if (id) {
         element.id = id;
     }
@@ -163,7 +169,7 @@ function getElement(tag: string, text: string, id?: string, type?: string,
     if (className) {
         element.className = className;
     }
-    if (src) {
+    if (tag === 'img' && src) {
         (element as HTMLImageElement ).src = src;
     }
     
