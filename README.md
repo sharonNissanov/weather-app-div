@@ -1,7 +1,7 @@
 # weather-app-div
  
 
-#Dynamic Weather Display
+# Dynamic Weather Display
 
 The main JavaScript function allows you to create a dynamic weather display on a webpage. It fetches weather data from an API and calculates the average temperature for each day of the week. Then, it constructs weather cards for the upcoming 7 days starting from the current date, displaying weather icons, descriptions, and temperatures.
 
