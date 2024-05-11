@@ -42,7 +42,7 @@ createWeatherElement(): void: Creates the weather element containing input and r
 - calcAvgTemp(data: WeatherData): void: Calculates the average temperature for each day of the week.
 - buildWeatherCardsByCurrDate(data: WeatherData): void: Builds weather cards for the upcoming 7 days starting from the current date.
 - buildWeatherCard(dayOfWeekStr: string, imgSrc: string, text: string, avgTemp: number): HTMLElement: Constructs a weather card element for a specific day.
-- getElement(tag: string, text: string, id?: string, type?: string, className?: string, src?: string, - - eventListener?: EventListener): HTMLElement: Creates an HTML element with optional properties and attributes.
+- getElement(tag: string, text: string, id?: string, type?: string, className?: string, src?: string, eventListener?: EventListener): HTMLElement: Creates an HTML element with optional properties and attributes.
 
 # Weather Data Type
 The WeatherData type represents the structure of the weather data retrieved from the Weather API.
