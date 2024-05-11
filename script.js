@@ -1,7 +1,8 @@
 console.log('hi')
  (function injectScriptIntoDiv(targetID = ""){
-
+    console.log('1')
 	var targetElement = getTargetElement(targetID);
+    console.log('2')
 	injectWithIframe();
 	/**
 	 * Retrieves the target element based on the provided ID.
@@ -11,6 +12,7 @@ console.log('hi')
 	 * @returns {HTMLElement} - The target element if found, otherwise the body element.
 	 */
 		function getTargetElement(targetID) {
+            console.log('4')
 			let valid = isValidId(targetID);
 			if(typeof targetID === 'string' && valid){ 
 				return document.getElementById(targetID);
@@ -23,6 +25,8 @@ console.log('hi')
 		 * @returns {boolean} - True if the ID is valid and corresponds to an existing element, otherwise false.
 		 */
 		function isValidId(targetID) {
+            console.log('5')
+            
 			// Check if the id is a non-empty string
 			if (typeof targetID !== 'string' || targetID.trim() === '' || targetID == null ) {
 				return false;
