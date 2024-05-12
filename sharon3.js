@@ -2,7 +2,7 @@
 
 console.log('window.targetIdDiv', window.targetIdDiv);
 
-let targetIdDiv = window.targetIdDiv ; // The ID of the target div element 
+targetIdDiv = window.targetIdDiv ; // The ID of the target div element 
 injectScriptIntoDiv(targetIdDiv);
 /**
  * Injects a script into a specified div element identified by its ID.
