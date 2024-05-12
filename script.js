@@ -2,7 +2,7 @@
 
 //let targetIdDiv = ''; // The ID of the target div element 
 injectScriptIntoDiv(targetIdDiv='');
-
+console.log(window.targetIdDiv); 
 /**
  * Injects a script into a specified div element identified by its ID.
  * If no ID is provided or the ID is invalid, the script is injected into the body.
