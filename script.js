@@ -1,5 +1,7 @@
 
-injectScriptIntoDiv('');
+
+//let targetIdDiv = ''; // The ID of the target div element 
+injectScriptIntoDiv(targetIdDiv='');
 
 /**
  * Injects a script into a specified div element identified by its ID.
@@ -44,37 +46,37 @@ function injectScriptIntoDiv(targetID = ""){
 	 * @returns {void}
 	 */
 		function injectWithIframe(){
-		console.log(targetElement)
-					
-	
-		let iframeContainer = document.createElement('div');
-		iframeContainer.id = "iframeContainer";
-		iframeContainer.style.paddingBottom = '22%';
-		iframeContainer.style.position = 'relative';
-		iframeContainer.style.width = '100%';
-		iframeContainer.style.height = '100%';
-		iframeContainer.style.overflow = 'hidden';
-		iframeContainer.style.zIndex = '10000';
-	
-		let iframe = document.createElement('iframe');
-		iframe.src = "https://dynamicweatherapp14.netlify.app/";
-		iframe.setAttribute("frameborder", "0");
-		iframe.setAttribute("allowfullscreen", "");
-	
-		iframe.style.position = 'absolute';
-		iframe.style.top = '0';
-		iframe.style.left = '0';
-		iframe.style.width = '100%';
-		iframe.style.height = '100%';
-		iframe.style.border = 'none';
-	
-	
-		iframeContainer.appendChild(iframe);
-		
-		// Append the new div to the document body
-		if(targetElement!==null){
-			targetElement.prepend(iframeContainer);
+			console.log(targetElement)
+						
+			let iframeContainer = document.createElement('div');
+			let iframe = document.createElement('iframe');
+			setIframeContainer();
+			iframe.src = "https://dynamicweatherapp14.netlify.app/";
+			iframeContainer.appendChild(iframe);
+			setIframe();
+			// Append the new div to the document body
+			if(targetElement!==null){
+				targetElement.prepend(iframeContainer);
+			}
+			
+			function setIframeContainer(){
+				iframeContainer.id = "iframeContainer";
+				iframeContainer.style.paddingBottom = '22%';
+				iframeContainer.style.position = 'relative';
+				iframeContainer.style.width = '100%';
+				iframeContainer.style.height = '100%';
+				iframeContainer.style.overflow = 'hidden';
+				iframeContainer.style.zIndex = '10000';
+			}
+			function setIframe(){
+				iframe.setAttribute("frameborder", "0");
+				iframe.setAttribute("allowfullscreen", "");
+				iframe.style.position = 'absolute';
+				iframe.style.top = '0';
+				iframe.style.left = '0';
+				iframe.style.width = '100%';
+				iframe.style.height = '100%';
+				iframe.style.border = 'none';
+			}
 		}
-		
-	}
 	};
