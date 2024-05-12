@@ -31,7 +31,13 @@ function injectScriptIntoDiv(){
 		 * @param {string} targetID - The ID to validate.
 		 * @returns {boolean} - True if the ID is valid and corresponds to an existing element, otherwise false.
 		 */
-		function isValidId(targetID) {       
+		function isValidId(targetID) {
+			const test = document.getElementById(targetID);
+			if (test) {
+				console.log('found', test)
+			} else {
+				console.error("Element with id '" + targetID + "' not found.");
+			}     
 			if (typeof targetID !== 'string' || targetID.trim() === '' || targetID == null ) {
 				return false;
 			} 
