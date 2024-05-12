@@ -9,6 +9,8 @@ document.body.prepend(script);
 
 In the code above you can see that the targetID=content.
 
+The script constructs an iframe with its source set to the weather-app-div project deployed on Netlify,\
+then injects this iframe into the target element.\
 I utilized the jsDelivr CDN to serve my injectDynamicWeatherDiv.js file.
 
 
@@ -20,5 +22,7 @@ the logic will be injected into the body element by default.
 Use this script to ***append*** Dynamic Weather logic: "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/solutions/appendDynamicWeatherDiv.js?targetID=content";  \
 Use this script for debbug: "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/test/tempdebbug.js?targetID=content"; 
 
-You can find more information in the wiki: https://github.com/sharonNissanov/weather-app-div/wiki \
+[Click here to learn more about the injection script](https://github.com/sharonNissanov/weather-app-div/wiki/Dynamic-Weather-Injection-Script) \
+[Click here to find more information in the wiki](https://github.com/sharonNissanov/weather-app-div/wiki)
+
 Feel free to contact me if you have any other questions.
