@@ -13,7 +13,6 @@ injectScriptIntoDiv(targetIdDiv);
 function injectScriptIntoDiv(targetID = ""){
 
 	var targetElement = getTargetElement(targetID);
-console.log(targetElement)
 	injectWithIframe();
 	/**
 	 * Retrieves the target element based on the provided ID. If the provided ID is valid and
@@ -62,7 +61,7 @@ console.log(targetElement)
 			
 			function setIframeContainer(){
 				iframeContainer.id = "iframeContainer";
-				iframeContainer.style.paddingBottom = '22%';
+				iframeContainer.style.paddingBottom = '16%';
 				iframeContainer.style.position = 'relative';
 				iframeContainer.style.width = '100%';
 				iframeContainer.style.height = '100%';
