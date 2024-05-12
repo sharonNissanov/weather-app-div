@@ -5,10 +5,15 @@ html{
 #weatherDiv {
     align-items: center;
     margin-bottom: 20px;
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 14px rgb(0 0 0 / 28%);
 }
 
 #weatherDiv label{
     padding: 0 5px;
+    font-size: 20px;
+    font-family: sans-serif;
 }
 
 #weatherInput {
@@ -27,9 +32,16 @@ html{
 }
 
 #weatherDiv p{
-    padding: 0 8px;
+    padding: 3px 8px;
     margin: 0;
+    font-size: 18px;
+    font-family: sans-serif;
 }
+
+#resultTitle span{
+    font-weight: 700;
+}
+
 #cardsContainer {
     display: flex;
     /* flex-wrap: wrap; */
