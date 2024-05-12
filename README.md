@@ -1,5 +1,4 @@
-# Dynamic Weather Display
-
+# Inject Dynamic Weather div into a webpage
 To inject the Dynamic Weather div into a webpage using a script tag,\
 ***set*** the targetID parameter to the ID of the div where you want the Dynamic Weather logic to be injected.\
 Here's the code you can use in the console of the webpage:
