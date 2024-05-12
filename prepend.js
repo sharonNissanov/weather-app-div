@@ -1,6 +1,6 @@
 
 
-console.log('window.targetIdDiv', window.targetIdDiv);
+//console.log('window.targetIdDiv', window.targetIdDiv);
 
 targetIdDiv = window.targetIdDiv ; // The ID of the target div element 
 injectScriptIntoDiv(targetIdDiv);
@@ -46,7 +46,7 @@ function injectScriptIntoDiv(targetID = ""){
 	 * @returns {void}
 	 */
 		function injectWithIframe(){
-			console.log(targetElement)
+			//console.log(targetElement)
 						
 			let iframeContainer = document.createElement('div');
 			let iframe = document.createElement('iframe');
