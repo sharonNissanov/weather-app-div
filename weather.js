@@ -85,7 +85,7 @@ function buildDynamicWeatherDiv() {
         var resultEle = document.getElementById("resultTitle");
         if (resultEle) {
             if (succeeded && ((_a = data === null || data === void 0 ? void 0 : data.location) === null || _a === void 0 ? void 0 : _a.name)) {
-                resultEle.innerHTML = "The average temperature for the next 2 weeks in " + "<span>".concat(data.location.name, "</span> ");
+                resultEle.innerHTML = "The average temperature in " + "<span>".concat(data.location.name, "</span> ");
             }
             else {
                 resultEle.innerText = "Something went wrong, please try again";

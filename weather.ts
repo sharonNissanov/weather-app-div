@@ -91,7 +91,7 @@ function setResultTitle(succeeded: boolean, data: WeatherData | null): void {
     const resultEle = document.getElementById("resultTitle");
     if (resultEle) {
         if (succeeded && data?.location?.name) {
-            resultEle.innerHTML = `The average temperature for the next 2 weeks in `+`<span>${data.location.name}</span> `;
+            resultEle.innerHTML = `The average temperature in `+`<span>${data.location.name}</span> `;
         } else {
             resultEle.innerText = "Something went wrong, please try again";
             const cardsContainer = document.getElementById("cardsContainer");
