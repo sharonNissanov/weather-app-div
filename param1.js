@@ -8,7 +8,7 @@ injectScriptIntoDiv();
  */
 function injectScriptIntoDiv(){
     const params = new URLSearchParams(window.location.search);
-    const targetID = params.get('param1');
+    const targetID = params.get('targetID');
 	var targetElement = getTargetElement(targetID);
     console.log('targetID', targetID, targetElement)
 	injectWithIframe();
