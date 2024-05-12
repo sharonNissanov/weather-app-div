@@ -20,3 +20,4 @@ the logic will be injected into the body element by default.
 Use this script to ***append*** Dynamic Weather logic: "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/solutions/appendDynamicWeatherDiv.js?targetID=content";  \
 Use this script for debbug: "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/test/tempdebbug.js?targetID=content"; 
 
+You can find more information in the wiki: https://github.com/sharonNissanov/weather-app-div/wiki
