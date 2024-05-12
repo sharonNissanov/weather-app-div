@@ -1,8 +1,21 @@
+var param1 = getParameterByName('param1');
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+console.log('param1', param1);
 
 
 //let targetIdDiv = ''; // The ID of the target div element 
+console.log('window.targetIdDiv', window.targetIdDiv);
+
+
 injectScriptIntoDiv(targetIdDiv='');
-console.log(window.targetIdDiv); 
 /**
  * Injects a script into a specified div element identified by its ID.
  * If no ID is provided or the ID is invalid, the script is injected into the body.
