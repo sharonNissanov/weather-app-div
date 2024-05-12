@@ -3,7 +3,7 @@
 console.log('window.targetIdDiv', window.targetIdDiv);
 
 let targetIdDiv = window.targetIdDiv ; // The ID of the target div element 
-injectScriptIntoDiv(targetIdDiv = '');
+injectScriptIntoDiv(targetIdDiv);
 /**
  * Injects a script into a specified div element identified by its ID.
  * If no ID is provided or the ID is invalid, the script is injected into the body.
@@ -13,7 +13,7 @@ injectScriptIntoDiv(targetIdDiv = '');
 function injectScriptIntoDiv(targetID = ""){
 
 	var targetElement = getTargetElement(targetID);
-
+console.log(targetElement)
 	injectWithIframe();
 	/**
 	 * Retrieves the target element based on the provided ID. If the provided ID is valid and
