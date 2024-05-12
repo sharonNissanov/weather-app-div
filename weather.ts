@@ -39,14 +39,13 @@ function createWeatherElement(): void {
 }
 
 /**
- * This function will be called whenever the user change the input field.
- * @param {Event} event - The change event triggered by the input field.
+ * Event handler function triggered when the input value changes.
+ * Use the user-entered location from the input field and constructs the API URL.
+ * @param {Event} event - The event object representing the input change event.
  * @returns {void}
  */
     function onChangeInput(event: Event): void{
-        //Retrieve user-entered location and construct API URL
         const inputValue: string = (event.target as HTMLInputElement).value;
-        console.log('Input value:', inputValue);
         let reqUrl: string = baseUrl + `&q=${inputValue}`;
          // Fetch weather data from the API
         getWeatherData(reqUrl);
@@ -59,7 +58,6 @@ function createWeatherElement(): void {
  * @returns {void}
  */
 function getWeatherData(url:string): void{
-    console.log(url )
     fetch(url)
     .then(response => {
          // Check for valid network response
@@ -71,13 +69,12 @@ function getWeatherData(url:string): void{
     })
     .then(data => {
         setResultTitle(true, data);
-        console.log(data); 
         calcAvgTemp(data);
     })
     .catch(error => {
         // Handle errors
         setResultTitle(false, null);
-        console.error('ERROR:', error);
+       // console.error('ERROR:', error);
     });
 }
 
@@ -135,7 +132,7 @@ function calcAvgTemp(data: WeatherData): void{
             }
         });
     }
-    console.log(avgMap)
+   // console.log(avgMap)
     buildWeatherCardsByCurrDate(data);
 }
 
