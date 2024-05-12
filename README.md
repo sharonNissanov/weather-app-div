@@ -9,6 +9,8 @@ document.body.prepend(script);
 
 In the code above you can see that the targetID=content.
 
+The script constructs an iframe with its source set to the weather app project deployed on Netlify,\
+then injects this iframe into the target element.\
 I utilized the jsDelivr CDN to serve my injectDynamicWeatherDiv.js file.
 
 
