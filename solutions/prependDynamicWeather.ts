@@ -1,4 +1,3 @@
-
 // Invokes (prepend) the function to inject a script into a specified div element.
 injectScriptIntoDiv();
 
@@ -7,25 +6,31 @@ injectScriptIntoDiv();
  * If no ID is provided from url or the ID is invalid, the script is injected into the body.
  * @returns {void}
  */
-function injectScriptIntoDiv(){
-	const scriptSrc = document.currentScript.src;
-	const url = new URL(scriptSrc);
-    const targetID = url.searchParams.get('targetID');
-	var targetElement = getTargetElement(targetID);
-	injectWithIframe(targetElement);
+function injectScriptIntoDiv() :void{
+    const scriptElement = document.currentScript;
+    const scriptSrc = scriptElement?.getAttribute('src');
+
+    // Check if scriptSrc is not null or undefined
+    if (scriptSrc) {
+        const url = new URL(scriptSrc);
+        const targetID = url.searchParams.get('targetID');
+        const targetElement = getTargetElement(targetID);
+        injectWithIframe(targetElement);
+    }
+	
 };
 
 /**
  * Injects an iframe containing the content of a specified URL into the target element.
  * The injected iframe is styled to match the dimensions of the target element.
  * The source of the iframe is the weather app deployed on Netlify.
- * @param {HTMLElement} targetElement - the target element.
+ * @param {HTMLElement | null} targetElement - the target element.
  * @returns {void}
  */
-function injectWithIframe(targetElement) {
-
-    let iframeContainer = document.createElement('div');
-    let iframe = document.createElement('iframe');
+function injectWithIframe(targetElement: HTMLElement | null): void {
+    
+    let iframeContainer: HTMLElement = document.createElement('div'); 
+    let iframe: HTMLIFrameElement  = document.createElement('iframe');
 
     // Set styles for the iframe container and iframe
     setIframeContainerStyle();
@@ -42,7 +47,7 @@ function injectWithIframe(targetElement) {
     }
     
     // Function to set styles for the iframe container
-    function setIframeContainerStyle(){
+    function setIframeContainerStyle():void{
         iframeContainer.id = "iframeContainer";
         iframeContainer.style.paddingBottom = '16%';
         iframeContainer.style.position = 'relative';
@@ -53,7 +58,7 @@ function injectWithIframe(targetElement) {
     }
 
    // Function to set styles for the iframe
-    function setIframeStyle(){
+    function setIframeStyle():void{
         iframe.setAttribute("frameborder", "0");
         iframe.setAttribute("allowfullscreen", "");
         iframe.style.position = 'absolute';
@@ -69,9 +74,9 @@ function injectWithIframe(targetElement) {
  * Returns the target element based on the provided ID. If the provided ID is valid and
  * corresponds to an existing element, returns that element; otherwise, returns the body element.
  * @param {string} targetID - The ID of the target element.
- * @returns {HTMLElement} - The target element if found, otherwise the body element.
+ * @returns {HTMLElement | null} - The target element if found, otherwise the body element.
  */
-function getTargetElement(targetID) {
+function getTargetElement(targetID: string): HTMLElement | null {
     let valid = isValidId(targetID);
     if(typeof targetID === 'string' && valid){ 
         return document.getElementById(targetID);
@@ -84,7 +89,7 @@ function getTargetElement(targetID) {
  * @param {string} targetID - The ID to validate.
  * @returns {boolean} - True if the ID is valid and corresponds to an existing element, otherwise false.
  */
-function isValidId(targetID) {    
+function isValidId(targetID: string): boolean{    
     if (typeof targetID !== 'string' || targetID.trim() === '' || targetID == null ) {
         return false;
     } 
