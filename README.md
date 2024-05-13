@@ -4,7 +4,7 @@ To inject the Dynamic Weather div into a webpage using a script tag,\
 Here's the code you can use in the console of the webpage:
 
 const script = document.createElement("script");\
-script.src = "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/solutions/appendDynamicWeather1.js?targetID=content";
+script.src = "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/solutions/appendDynamicWeather1.js?targetID=content";\
 document.body.append(script);
 
 In the code above you can see that the targetID=content.
