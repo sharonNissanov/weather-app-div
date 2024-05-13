@@ -13,8 +13,6 @@ function injectScriptIntoDiv() {
         var url = new URL(scriptSrc);
         var targetID = url.searchParams.get('targetID');
         var targetElement = getTargetElement(targetID);
-        console.log("url: ", url);
-        console.log("targetID: ", targetID, "targetElement: ", targetElement);
         injectWithIframe(targetElement);
     }
 }

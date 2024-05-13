@@ -15,8 +15,6 @@ function injectScriptIntoDiv() :void{
         const url = new URL(scriptSrc);
         const targetID = url.searchParams.get('targetID');
         const targetElement = getTargetElement(targetID);
-        console.log("url: ", url);
-        console.log("targetID: ", targetID, "targetElement: ", targetElement);
         injectWithIframe(targetElement);
     }
 	
