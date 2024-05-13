@@ -19,7 +19,7 @@ If the targetID parameter is not provided or provided but not found in the webpa
 the logic will be injected into the body element by default.
 
 ***More src options***\
-Use this script to ***prepend*** Dynamic Weather logic: "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/solutions/injectDynamicWeatherDiv.js?targetID=content"; \
+Use this script to ***prepend*** Dynamic Weather logic: "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/solutions/prependDynamicWeather.js?targetID=content"; \
 Use this script for debbug: "https://cdn.jsdelivr.net/gh/sharonNissanov/weather-app-div@main/test/appendDebbug.js?targetID=content"; 
 
 [Click here to learn more about the injection script](https://github.com/sharonNissanov/weather-app-div/wiki/Dynamic-Weather-Injection-Script) \
